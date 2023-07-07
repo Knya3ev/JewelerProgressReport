@@ -1,0 +1,17 @@
+spring:
+  mvc:
+    format:
+      date: "yyyy-MM-dd"
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/jeweler_db
+    username: postgres
+    password: 12345
+
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    properties:
+      hibernate:
+        ddl-auto: create
