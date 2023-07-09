@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -28,7 +30,7 @@ public class SizeRing {
 
     @ManyToMany(mappedBy = "sizeRings", fetch = FetchType.LAZY)
     @Builder.Default
-    private List<Jewelry> jewelry = new ArrayList<>();
+    private Set<Jewelry> jewelry = new HashSet<>();
 
     @OneToMany(mappedBy = "resizes")
     @Builder.Default

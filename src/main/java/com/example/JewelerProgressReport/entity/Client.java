@@ -2,12 +2,12 @@ package com.example.JewelerProgressReport.entity;
 
 
 import lombok.*;
-
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "client")
@@ -32,7 +32,7 @@ public class Client {
     private List<Report> reports = new ArrayList<>();
 
     @ManyToMany(mappedBy = "clients", fetch = FetchType.LAZY)
-    private List<Jewelry> jewelries = new ArrayList<>();
+    private Set<Jewelry> jewelries = new HashSet<>();
 
     public Client(String numberPhone, int countVisits, LocalDateTime lastVisit) {
         this.numberPhone = numberPhone;

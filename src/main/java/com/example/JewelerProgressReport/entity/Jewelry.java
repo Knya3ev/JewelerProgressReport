@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,16 +31,16 @@ public class Jewelry {
     private String typeJewelry;
 
     @ManyToMany
-    @JoinTable(name = "client_jewelry",
-            joinColumns = @JoinColumn(name = "client_id"),
-            inverseJoinColumns = @JoinColumn(name = "jewelry_id"))
-    private List<Client> clients = new ArrayList<>();
+    @JoinTable(name = "jewelry_client",
+            joinColumns = @JoinColumn(name = "jewelry_id"),
+            inverseJoinColumns = @JoinColumn(name = "client_id"))
+    private Set<Client> clients = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "size_jewelry",
-            joinColumns = @JoinColumn(name = "size_id"),
-            inverseJoinColumns = @JoinColumn(name = "jewelry_id"))
-    private List<SizeRing> sizeRings = new ArrayList<>();
+    @JoinTable(name = "jewelry_size",
+            joinColumns = @JoinColumn(name = "jewelry_id"),
+            inverseJoinColumns = @JoinColumn(name = "size_id"))
+    private Set<SizeRing> sizeRings = new HashSet<>();
 
     public Jewelry(String article, String typeJewelry) {
         this.article = article;

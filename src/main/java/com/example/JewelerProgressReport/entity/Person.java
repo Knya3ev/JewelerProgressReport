@@ -43,6 +43,7 @@ public class Person {
         reports.remove(report);
         report.setPerson(null);
     }
+    //TODO: реализовать возможность добавлять сотрудников
 
 }
 

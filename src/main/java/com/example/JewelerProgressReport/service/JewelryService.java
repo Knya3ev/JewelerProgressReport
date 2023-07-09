@@ -49,7 +49,7 @@ public class JewelryService {
     }
     private void addSizeRing(ReportRequest report, Jewelry jewelry ){
         SizeRing sizeRing = sizeRingService
-                .checkoutSizeRingOrCreate(report.getSizeAfter(),report.getSizeBefore());
+                .checkoutSizeRingOrCreate(report.getSizeBefore(),report.getSizeAfter());
         jewelry.addSizeRing(sizeRing);
     }
 }

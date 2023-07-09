@@ -30,8 +30,8 @@ public class SizeRingService {
         SizeRing sizeRing =
                 SizeRing.builder()
                         .ringResizing(size)
-                        .after(after)
                         .before(before)
+                        .after(after)
                         .build();
         this.create(sizeRing);
         return sizeRing;
