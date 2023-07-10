@@ -23,7 +23,7 @@ public class Client {
 
     private String numberPhone;
 
-    private int countVisits = 0;
+    private int countVisits = 1;
 
     private LocalDateTime lastVisit;
 
@@ -34,9 +34,8 @@ public class Client {
     @ManyToMany(mappedBy = "clients", fetch = FetchType.LAZY)
     private Set<Jewelry> jewelries = new HashSet<>();
 
-    public Client(String numberPhone, int countVisits, LocalDateTime lastVisit) {
+    public Client(String numberPhone,LocalDateTime lastVisit) {
         this.numberPhone = numberPhone;
-        this.countVisits += 1;
         this.lastVisit = lastVisit;
     }
 

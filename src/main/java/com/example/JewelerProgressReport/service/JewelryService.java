@@ -23,7 +23,8 @@ public class JewelryService {
                 .orElseThrow(() -> new JewelryNotFoundException("Jewelry with the article %s is not found".formatted(article)));
     }
     public void createJewelryIfIsNotNullArticle(Client client, ReportRequest reportRequest) {
-        if (reportRequest.getArticle() != null && reportRequest.getSizeBefore() != null
+        if (reportRequest.getArticle() != null
+                && reportRequest.getSizeBefore() != null
                 && reportRequest.getSizeAfter() != null) {
 
             Jewelry jewelry = this.checkoutJewelryOrCreate(reportRequest.getArticle(), reportRequest.getTypeProduct());

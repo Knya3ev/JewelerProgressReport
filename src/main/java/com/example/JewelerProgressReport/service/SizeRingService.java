@@ -27,6 +27,7 @@ public class SizeRingService {
         Optional<SizeRing> sizeRing1 = sizeRingRepository.findByRingResizing(size);
 
         if (sizeRing1.isPresent()) return sizeRing1.get();
+
         SizeRing sizeRing =
                 SizeRing.builder()
                         .ringResizing(size)

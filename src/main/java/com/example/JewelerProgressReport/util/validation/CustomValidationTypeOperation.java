@@ -1,9 +1,6 @@
 package com.example.JewelerProgressReport.util.validation;
 
-import com.example.JewelerProgressReport.model.request.ReportRequest;
-import com.example.JewelerProgressReport.model.typeEnum.TypeOfMetalColor;
 import com.example.JewelerProgressReport.model.typeEnum.TypeOfOperation;
-import com.example.JewelerProgressReport.util.validation.custom_annotation.TypeMetalColor;
 import com.example.JewelerProgressReport.util.validation.custom_annotation.TypeOperation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -22,11 +19,6 @@ public class CustomValidationTypeOperation implements ConstraintValidator<TypeOp
 
         context.disableDefaultConstraintViolation();
 
-        if (value.isEmpty()) {
-            context.buildConstraintViolationWithTemplate
-                    ("Operation cannot be empty").addConstraintViolation();
-            return false;
-        }
         int i = 0;
         try {
             for (String item : value) {

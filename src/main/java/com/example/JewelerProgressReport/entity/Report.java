@@ -1,15 +1,11 @@
 package com.example.JewelerProgressReport.entity;
 
 
-import com.example.JewelerProgressReport.model.typeEnum.TypeOfJewelry;
-import com.example.JewelerProgressReport.model.typeEnum.TypeOfMetalColor;
-
 import lombok.*;
 
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.*;
 
 @Entity
 @Getter
@@ -25,6 +21,9 @@ public class Report {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "count")
+    private int count; //  количество изделий
+
     @Column(name = "type_product")
     private String typeProduct; // тип изделия
 
@@ -33,12 +32,6 @@ public class Report {
 
     @Column(name = "type_of_operation")
     private String typeOfOperation; // тип операции
-
-    @Column(name = "phone_number")
-    private String phoneNumber; // номер телефона клиента
-
-//    @Column(name = "resize")
-//    private String resize; // указывается изминение размера если оно есть
 
     @Column(name = "details_of_operation")
     private String detailsOfOperation; // подробности операции
@@ -68,9 +61,10 @@ public class Report {
     private Client client;
 
 
-    public void removePersonAndClient(){
+    public void removePersonAndClientAndResizes(){
         person.removeReport(this);
         client.removeReport(this);
+        resizes.removeReport(this);
     }
 
 }

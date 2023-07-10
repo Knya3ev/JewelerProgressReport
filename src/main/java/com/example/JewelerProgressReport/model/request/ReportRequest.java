@@ -28,7 +28,7 @@ public class ReportRequest {
     @NotNull(message = "the phone field cannot be empty")
     @Pattern(regexp = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$", message = "phone not correct")
     private String phoneNumber;
-
+    private int count = 1;
     private String detailsOfOperation;
     private Double sizeBefore;
     private Double sizeAfter;

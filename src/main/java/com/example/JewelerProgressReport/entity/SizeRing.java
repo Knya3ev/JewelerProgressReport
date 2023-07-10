@@ -34,6 +34,10 @@ public class SizeRing {
 
     @OneToMany(mappedBy = "resizes")
     @Builder.Default
-    private List<Report> report = new ArrayList<>();
+    private List<Report> reports = new ArrayList<>();
 
+    public void removeReport(Report report){
+        reports.remove(report);
+        report.setResizes(null);
+    }
 }

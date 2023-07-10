@@ -15,7 +15,9 @@ public class ReportResponse {
     private String typeOfOperation;
     private String phoneNumber;
     private String detailsOfOperation;
+    private String resize;
     private String unionCodeJewelry;
     private String article;
-    private Date date;
+    private int count;
+    private Date createdDate;
 }

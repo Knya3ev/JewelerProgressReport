@@ -1,6 +1,5 @@
 package com.example.JewelerProgressReport.util.validation;
 
-import com.example.JewelerProgressReport.model.request.ReportRequest;
 import com.example.JewelerProgressReport.model.typeEnum.TypeOfMetalColor;
 import com.example.JewelerProgressReport.util.validation.custom_annotation.TypeMetalColor;
 import jakarta.validation.ConstraintValidator;

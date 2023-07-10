@@ -47,12 +47,22 @@ public class ClientService {
         clientRepository.delete(client);
     }
     public Client checkoutClientOrCreate(String phoneNumber){
+        return this.checkoutClient(phoneNumber,false);
+    }
+    public Client checkoutClientOrCreate(String phoneNumber, boolean updateForReport){
+        return this.checkoutClient(phoneNumber,updateForReport);
+    }
+
+    private Client checkoutClient(String phoneNumber, boolean updateForReport){
+        String replacedPhoneNumber = phoneNumber.replace("+7", "8").replace(" ", "");
         try{
-            return this.read(phoneNumber);
+            Client client = this.read(replacedPhoneNumber);
+            if (!updateForReport) clientRepository.updateLastVisitAndCountVisit(client.getId());
+            return client;
 
         }catch (ClientNotFoundException e){
 
-            Client client = new Client(phoneNumber,1, LocalDateTime.now());
+            Client client = new Client(replacedPhoneNumber, LocalDateTime.now());
             this.create(client);
             return client;
         }
