@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_person_table
+      author: Mikhail Knyazev
+      changes:
+
+        - createSequence:
+            sequenceName: person_seq
+            dataType: bigint
+            startValue: 1
+            incrementBy: 1
+            minValue: 1
+            maxValue: 9223372036854775807
+            cycle: false
+            cacheSize: 1
+
+        - createTable:
+            tableName: person
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: person_pk
+
+              - column:
+                  name: username
+                  type: VARCHAR(50)
+              - column:
+                  name: firstname
+                  type: VARCHAR(50)
+              - column:
+                  name: address
+                  type: VARCHAR(100)
+              - column:
+                  name: telegram_id
+                  type: VARCHAR(100)
+                  constraints:
+                    unique: true
+              - column:
+                  name: phone_number
+                  type: VARCHAR(50)
+                  constraints:
+                    unique: true
+              - column:
+                  name: is_verification
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+
+

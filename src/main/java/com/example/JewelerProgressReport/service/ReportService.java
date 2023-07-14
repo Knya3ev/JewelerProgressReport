@@ -62,7 +62,7 @@ public class ReportService {
         reportUpdate.setTypeOfMetalColor(report.getTypeOfMetalColor());
         reportUpdate.setTypeOfOperation(report.getTypeOfOperation());
         reportUpdate.setDetailsOfOperation(report.getDetailsOfOperation());
-        reportUpdate.setResizes(sizeRingService.checkoutSizeRingOrCreate(report.getResizes().getBefore(), report.getResizes().getAfter()));
+        reportUpdate.setResize(sizeRingService.checkoutSizeRingOrCreate(report.getResize().getBefore(), report.getResize().getAfter()));
         reportUpdate.setUnionCodeJewelry(report.getUnionCodeJewelry());
         reportUpdate.setArticle(report.getArticle());
         reportUpdate.setClient(clientService.checkoutClientOrCreate(reportRequest.getPhoneNumber(),true));

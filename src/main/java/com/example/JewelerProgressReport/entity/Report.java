@@ -17,7 +17,8 @@ import java.time.LocalDateTime;
 @Table(name = "report")
 public class Report {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(allocationSize = 1, name = "report_seq", sequenceName = "report_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "report_seq")
     @Column(name = "id")
     private Long id;
 
@@ -27,7 +28,7 @@ public class Report {
     @Column(name = "type_product")
     private String typeProduct; // тип изделия
 
-    @Column(name= "type_of_metal_color")
+    @Column(name = "type_of_metal_color")
     private String typeOfMetalColor; // цвет изделия(металла)
 
     @Column(name = "type_of_operation")
@@ -54,17 +55,17 @@ public class Report {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private SizeRing resizes;
+    private Resize resize;
     @ManyToOne(fetch = FetchType.LAZY)
     private Person person;
     @ManyToOne(fetch = FetchType.LAZY)
     private Client client;
 
 
-    public void removePersonAndClientAndResizes(){
+    public void removePersonAndClientAndResizes() {
         person.removeReport(this);
         client.removeReport(this);
-        resizes.removeReport(this);
+        resize.removeReport(this);
     }
 
 }

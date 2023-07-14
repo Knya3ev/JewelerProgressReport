@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_jewelry_client_table
+      author: Mikhail Knyazev
+      changes:
+        - createSequence:
+            sequenceName: jewelry_client_seq
+            dataType: bigint
+            startValue: 1
+            incrementBy: 1
+            minValue: 1
+            maxValue: 9223372036854775807
+            cycle: false
+            cacheSize: 1
+
+        - createTable:
+            tableName: jewelry_client
+            columns:
+              - column:
+                  name: jewelry_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: client_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+
+        - addForeignKeyConstraint:
+            baseTableName: jewelry_client
+            baseColumnNames: jewelry_id
+            referencedTableName: jewelry
+            referencedColumnNames: id
+            constraintName: jewelry_client_jewelry_id_fk
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            validate: true
+            deferrable: false
+            initiallyDeferred: false
+
+        - addForeignKeyConstraint:
+            baseTableName: jewelry_client
+            baseColumnNames: client_id
+            referencedTableName: client
+            referencedColumnNames: id
+            constraintName: jewelry_client_client_id_fk
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            validate: true
+            deferrable: false
+            initiallyDeferred: false
+
+        - addPrimaryKey:
+            tableName: jewelry_client
+            columnNames: jewelry_id, client_id
+            constraintName: jewelry_client_pk
+

@@ -1,0 +1,105 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_report_table
+      author: Mikhail Knyazev
+      changes:
+
+        - createSequence:
+            sequenceName: report_seq
+            dataType: bigint
+            startValue: 1
+            incrementBy: 1
+            minValue: 1
+            maxValue: 9223372036854775807
+            cycle: false
+            cacheSize: 1
+
+        - createTable:
+            tableName: report
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: report_pk
+              - column:
+                  name: count
+                  type: INTEGER
+              - column:
+                  name: type_product
+                  type: VARCHAR(50)
+              - column:
+                  name: type_of_metal_color
+                  type: VARCHAR(20)
+              - column:
+                  name: type_of_operation
+                  type: VARCHAR(255)
+              - column:
+                  name: details_of_operation
+                  type: VARCHAR(150)
+              - column:
+                  name: union_code_jewelry
+                  type: VARCHAR(50)
+              - column:
+                  name: article
+                  type: VARCHAR(50)
+              - column:
+                  name: created_date
+                  type: TIMESTAMP
+              - column:
+                  name: is_edit
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+              - column:
+                  name: edit_date
+                  type: TIMESTAMP
+
+
+              - column:
+                  name: client_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: report_client_fk
+
+              - column:
+                  name: person_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: report_person_fk
+
+              - column:
+                  name: resize_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: report_resize_fk
+
+
+        - addForeignKeyConstraint:
+            baseTableName: report
+            baseColumnNames: client_id
+            constraintName: report_client_fk
+            referencedTableName: client
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: report
+            baseColumnNames: person_id
+            constraintName: report_person_fk
+            referencedTableName: person
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: report
+            baseColumnNames: resize_id
+            constraintName: report_resize_fk
+            referencedTableName: resize
+            referencedColumnNames: id
+            onDelete: CASCADE
+

@@ -15,10 +15,11 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "size_ring")
-public class SizeRing {
+@Table(name = "resize")
+public class Resize {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(allocationSize = 1, name = "resize_seq", sequenceName = "resize_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "resize_seq")
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(name = "ring_resizing")
@@ -28,16 +29,16 @@ public class SizeRing {
     @Column(name = "after")
     private Double after;
 
-    @ManyToMany(mappedBy = "sizeRings", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "resizes", fetch = FetchType.LAZY)
     @Builder.Default
     private Set<Jewelry> jewelry = new HashSet<>();
 
-    @OneToMany(mappedBy = "resizes")
+    @OneToMany(mappedBy = "resize")
     @Builder.Default
     private List<Report> reports = new ArrayList<>();
 
-    public void removeReport(Report report){
+    public void removeReport(Report report) {
         reports.remove(report);
-        report.setResizes(null);
+        report.setResize(null);
     }
 }

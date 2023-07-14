@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_client_table
+      author: Mikhail Knyazev
+      changes:
+        - createSequence:
+            sequenceName: client_seq
+            dataType: bigint
+            startValue: 1
+            incrementBy: 1
+            minValue: 1
+            maxValue: 9223372036854775807
+            cycle: false
+            cacheSize: 1
+
+        - createTable:
+            tableName: client
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: client_pk
+              - column:
+                  name: number_phone
+                  type: VARCHAR(20)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: count_visits
+                  type: INTEGER
+                  defaultValueNumeric: 1
+              - column:
+                  name: last_visit
+                  type: TIMESTAMP

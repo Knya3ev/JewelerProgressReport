@@ -8,10 +8,13 @@ spring:
     username: postgres
     password: 12345
 
+  liquibase:
+    enabled: true
+    change-log: classpath:db.changelog/changelog-master.yml
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    generate-ddl: true
+    generate-ddl: false
     properties:
       hibernate:
-        ddl-auto: create
+        ddl-auto: validate

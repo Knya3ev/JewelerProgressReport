@@ -17,8 +17,9 @@ import java.util.Set;
 @NoArgsConstructor
 public class Jewelry {
     @Id
+    @SequenceGenerator(allocationSize = 1, name = "jewelry_seq", sequenceName = "jewelry_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jewelry_seq")
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "article")
@@ -37,23 +38,24 @@ public class Jewelry {
     private Set<Client> clients = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "jewelry_size",
+    @JoinTable(name = "jewelry_resize",
             joinColumns = @JoinColumn(name = "jewelry_id"),
-            inverseJoinColumns = @JoinColumn(name = "size_id"))
-    private Set<SizeRing> sizeRings = new HashSet<>();
+            inverseJoinColumns = @JoinColumn(name = "resize_id"))
+    private Set<Resize> resizes = new HashSet<>();
 
     public Jewelry(String article, String typeJewelry) {
         this.article = article;
         this.typeJewelry = typeJewelry;
     }
 
-    public void addSizeRing(SizeRing sizeRing){
-        sizeRings.add(sizeRing);
-        sizeRing.getJewelry().add(this);
+    public void addSizeRing(Resize resize) {
+        this.resizes.add(resize);
+        resize.getJewelry().add(this);
     }
-    public void removeSizeRing(SizeRing sizeRing){
-        sizeRings.remove(sizeRing);
-        sizeRing.getJewelry().remove(this);
+
+    public void removeSizeRing(Resize resize) {
+        this.resizes.remove(resize);
+        resize.getJewelry().remove(this);
     }
     // э0901кц02159700
     // 0901 - белое

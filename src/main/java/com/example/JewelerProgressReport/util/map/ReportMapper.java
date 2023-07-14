@@ -44,7 +44,7 @@ public class ReportMapper {
                 .detailsOfOperation(reportRequest.getDetailsOfOperation())
 
 
-                .resizes(reportRequest.getSizeBefore() != null && reportRequest.getSizeAfter() != null ?
+                .resize(reportRequest.getSizeBefore() != null && reportRequest.getSizeAfter() != null ?
                         sizeRingService.checkoutSizeRingOrCreate(reportRequest.getSizeBefore(), reportRequest.getSizeAfter())
                         : null)
 
@@ -70,7 +70,7 @@ public class ReportMapper {
         reportResponse.setDetailsOfOperation(report.getDetailsOfOperation());
         reportResponse.setUnionCodeJewelry(report.getUnionCodeJewelry());
         reportResponse.setPhoneNumber(report.getClient().getNumberPhone());
-        reportResponse.setResize(report.getResizes() != null? report.getResizes().getRingResizing(): null);
+        reportResponse.setResize(report.getResize() != null? report.getResize().getRingResizing(): null);
         reportResponse.setArticle(report.getArticle());
         reportResponse.setCount(report.getCount());
         if (report.getCreatedDate() != null) {

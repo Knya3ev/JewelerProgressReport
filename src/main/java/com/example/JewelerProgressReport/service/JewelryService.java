@@ -3,8 +3,7 @@ package com.example.JewelerProgressReport.service;
 
 import com.example.JewelerProgressReport.entity.Client;
 import com.example.JewelerProgressReport.entity.Jewelry;
-import com.example.JewelerProgressReport.entity.Report;
-import com.example.JewelerProgressReport.entity.SizeRing;
+import com.example.JewelerProgressReport.entity.Resize;
 import com.example.JewelerProgressReport.exception.JewelryNotFoundException;
 import com.example.JewelerProgressReport.model.request.ReportRequest;
 import com.example.JewelerProgressReport.repository.JewelryRepository;
@@ -49,8 +48,8 @@ public class JewelryService {
         }
     }
     private void addSizeRing(ReportRequest report, Jewelry jewelry ){
-        SizeRing sizeRing = sizeRingService
+        Resize resize = sizeRingService
                 .checkoutSizeRingOrCreate(report.getSizeBefore(),report.getSizeAfter());
-        jewelry.addSizeRing(sizeRing);
+        jewelry.addSizeRing(resize);
     }
 }

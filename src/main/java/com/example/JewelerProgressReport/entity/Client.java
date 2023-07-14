@@ -3,6 +3,7 @@ package com.example.JewelerProgressReport.entity;
 
 import lombok.*;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,14 +18,16 @@ import java.util.Set;
 @Setter
 public class Client {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(allocationSize = 1, name = "client_seq", sequenceName = "client_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "client_seq")
     @Column(name = "id")
     private Long id;
-
+    @Column(name = "number_phone")
     private String numberPhone;
 
+    @Column(name = "count_visits")
     private int countVisits = 1;
-
+    @Column(name = "last_visit")
     private LocalDateTime lastVisit;
 
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
@@ -34,24 +37,27 @@ public class Client {
     @ManyToMany(mappedBy = "clients", fetch = FetchType.LAZY)
     private Set<Jewelry> jewelries = new HashSet<>();
 
-    public Client(String numberPhone,LocalDateTime lastVisit) {
+    public Client(String numberPhone, LocalDateTime lastVisit) {
         this.numberPhone = numberPhone;
         this.lastVisit = lastVisit;
     }
 
-    public void addReports(Report report){
+    public void addReports(Report report) {
         reports.add(report);
         report.setClient(this);
     }
-    public void removeReport(Report report){
+
+    public void removeReport(Report report) {
         reports.remove(report);
         report.setClient(null);
     }
-    public void addJewelry(Jewelry jewelry){
+
+    public void addJewelry(Jewelry jewelry) {
         jewelries.add(jewelry);
         jewelry.getClients().add(this);
     }
-    public void removeJewelry(Jewelry jewelry){
+
+    public void removeJewelry(Jewelry jewelry) {
         jewelries.remove(jewelry);
         jewelry.getClients().remove(this);
     }

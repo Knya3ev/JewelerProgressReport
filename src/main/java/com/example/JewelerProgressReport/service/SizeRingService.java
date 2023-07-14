@@ -1,6 +1,6 @@
 package com.example.JewelerProgressReport.service;
 
-import com.example.JewelerProgressReport.entity.SizeRing;
+import com.example.JewelerProgressReport.entity.Resize;
 import com.example.JewelerProgressReport.repository.SizeRingRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +13,8 @@ import java.util.Optional;
 public class SizeRingService {
     private final SizeRingRepository sizeRingRepository;
     @Transactional
-    public void create(SizeRing sizeRing){
-        sizeRingRepository.save(sizeRing);
+    public void create(Resize resize){
+        sizeRingRepository.save(resize);
     }
 
 
@@ -22,20 +22,20 @@ public class SizeRingService {
         return String.format("%.2f -> %.2f", sizeBefore, sizeAfter);
     }
 
-    public SizeRing checkoutSizeRingOrCreate(Double before, Double after){
+    public Resize checkoutSizeRingOrCreate(Double before, Double after){
         String size = getSizeAdjustmentStringFormatted(before,after);
-        Optional<SizeRing> sizeRing1 = sizeRingRepository.findByRingResizing(size);
+        Optional<Resize> sizeRing1 = sizeRingRepository.findByRingResizing(size);
 
         if (sizeRing1.isPresent()) return sizeRing1.get();
 
-        SizeRing sizeRing =
-                SizeRing.builder()
+        Resize resize =
+                Resize.builder()
                         .ringResizing(size)
                         .before(before)
                         .after(after)
                         .build();
-        this.create(sizeRing);
-        return sizeRing;
+        this.create(resize);
+        return resize;
     }
 
 }

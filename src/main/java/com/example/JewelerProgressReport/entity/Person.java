@@ -16,7 +16,8 @@ import java.util.List;
 @Setter
 public class Person {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(allocationSize = 1, name = "person_seq", sequenceName = "person_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "person_seq")
     @Column(name = "id")
     private Long id;
     @Column(name = "username")
@@ -27,7 +28,7 @@ public class Person {
     private String address;
     @Column(name = "telegram_id")
     private String telegramId;
-    @Column(name = "phoneNumber")
+    @Column(name = "phone_number")
     private String phoneNumber;
     @Column(name = "is_verification")
     private boolean isVerification = false;
