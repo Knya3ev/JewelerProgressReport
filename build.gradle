@@ -43,6 +43,9 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.5.3.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 
+    implementation 'org.apache.poi:poi:5.0.0'
+    implementation 'org.apache.poi:poi-ooxml:5.0.0'
+
     implementation group: 'org.json', name: 'json', version: '20180813'
 
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'

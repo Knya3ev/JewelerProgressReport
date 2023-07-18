@@ -40,7 +40,7 @@ public class ReportMapper {
         return Report.builder()
                 .typeProduct(TypeOfJewelry.valueOf(reportRequest.getTypeProduct()).getRu())
                 .typeOfMetalColor(TypeOfMetalColor.valueOf(reportRequest.getTypeOfMetalColor()).getRu())
-                .typeOfOperation(String.join(" ,\n", newList))
+                .typeOfOperation(String.join(", ", newList))
                 .detailsOfOperation(reportRequest.getDetailsOfOperation())
 
 
