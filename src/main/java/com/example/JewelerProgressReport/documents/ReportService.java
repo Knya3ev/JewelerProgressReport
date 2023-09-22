@@ -1,8 +1,8 @@
 package com.example.JewelerProgressReport.documents;
 
+import com.example.JewelerProgressReport.exception.HttpException;
 import com.example.JewelerProgressReport.users.client.Client;
 import com.example.JewelerProgressReport.users.person.Person;
-import com.example.JewelerProgressReport.exception.ReportNotFoundException;
 import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.users.client.ClientService;
 import com.example.JewelerProgressReport.jewelry.JewelryService;
@@ -10,6 +10,7 @@ import com.example.JewelerProgressReport.users.person.PersonService;
 import com.example.JewelerProgressReport.jewelry.SizeRingService;
 import com.example.JewelerProgressReport.util.map.ReportMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +47,7 @@ public class ReportService {
 
     public Report read(Long id) {
         return reportRepository.findById(id)
-                .orElseThrow(() -> new ReportNotFoundException(String.format("Report by id %d not found", id)));
+                .orElseThrow(() -> new HttpException ("Report by id %d not found".formatted(id), HttpStatus.NOT_FOUND));
     }
 
     public List<Report> readAll() {

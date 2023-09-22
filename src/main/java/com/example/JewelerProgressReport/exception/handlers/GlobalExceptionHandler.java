@@ -1,10 +1,6 @@
 package com.example.JewelerProgressReport.exception.handlers;
 
-import com.example.JewelerProgressReport.exception.ClientNotFoundException;
-import com.example.JewelerProgressReport.exception.ReportNotFoundException;
-import com.example.JewelerProgressReport.exception.UserNotFoundException;
-import com.example.JewelerProgressReport.exception.UserTelegramIdNotFoundException;
-import com.example.JewelerProgressReport.exception.error.ApplicationError;
+import com.example.JewelerProgressReport.exception.HttpException;
 import com.example.JewelerProgressReport.exception.error.FieldsValidationError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,29 +19,9 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<ApplicationError> catchUserNotFound(UserNotFoundException e){
-        log.error(String.valueOf(e));
-        return new ResponseEntity<>( new ApplicationError(HttpStatus.NOT_FOUND.value(), e.getMessage()), HttpStatus.NOT_FOUND);
+    public ResponseEntity<String> catchHttpException(HttpException e) {
+        return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
     }
-
-    @ExceptionHandler
-    public ResponseEntity<ApplicationError> catchUserTelegramIdNotFound(UserTelegramIdNotFoundException e){
-        log.error(String.valueOf(e));
-        return new ResponseEntity<>( new ApplicationError(HttpStatus.NOT_FOUND.value(), e.getMessage()),HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<ApplicationError> catchClientNotFound(ClientNotFoundException e){
-        log.error(String.valueOf(e));
-        return new ResponseEntity<>( new ApplicationError(HttpStatus.NOT_FOUND.value(), e.getMessage()), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<ApplicationError> catchReportNotFoundException(ReportNotFoundException e){
-        log.error(String.valueOf(e));
-        return new ResponseEntity<>(new ApplicationError(HttpStatus.NOT_FOUND.value(), e.getMessage()),HttpStatus.NOT_FOUND);
-    }
-
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<FieldsValidationError> catchModelFieldDataValidationException(

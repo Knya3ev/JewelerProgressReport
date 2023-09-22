@@ -1,9 +1,8 @@
 package com.example.JewelerProgressReport.users.client;
 
-import com.example.JewelerProgressReport.exception.ClientNotFoundException;
-import com.example.JewelerProgressReport.users.client.Client;
-import com.example.JewelerProgressReport.users.client.ClientRepository;
+import com.example.JewelerProgressReport.exception.HttpException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,11 +22,11 @@ public class ClientService {
     }
     public Client read(Long id) {
         return clientRepository.findById(id)
-                .orElseThrow(() -> new ClientNotFoundException(String.format("Client by id %d is not found", id)));
+                .orElseThrow(() -> new HttpException("Client by id %d is not found".formatted(id), HttpStatus.NOT_FOUND));
     }
     public Client read(String phoneNumber) {
         return clientRepository.findByNumberPhone(phoneNumber)
-                .orElseThrow(() -> new ClientNotFoundException(String.format("Client with the phone number %s is not found", phoneNumber)));
+                .orElseThrow(() -> new HttpException("Client with the phone number %s is not found".formatted(phoneNumber), HttpStatus.NOT_FOUND));
     }
 
     public List<Client> readAll() {

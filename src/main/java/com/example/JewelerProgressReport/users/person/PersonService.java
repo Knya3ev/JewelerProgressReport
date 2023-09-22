@@ -1,11 +1,11 @@
 package com.example.JewelerProgressReport.users.person;
 
-import com.example.JewelerProgressReport.exception.UserNotFoundException;
-import com.example.JewelerProgressReport.exception.UserTelegramIdNotFoundException;
+import com.example.JewelerProgressReport.exception.HttpException;
 import com.example.JewelerProgressReport.util.map.PersonMapper;
 import com.example.JewelerProgressReport.users.person.request.CreatePersonRequest;
 import com.example.JewelerProgressReport.users.person.response.PersonResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +26,12 @@ public class PersonService {
 
     public Person read(Long id) {
         return personRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(String.format("User by id %d not found", id)));
+                .orElseThrow(() -> new HttpException("User by id %d not found".formatted(id), HttpStatus.NOT_FOUND));
     }
 
     public Person readTelegramId(Long telegramId) {
         return personRepository.findByTelegramId(telegramId)
-                .orElseThrow(() -> new UserTelegramIdNotFoundException(String.format("User by telegram id %d not found", telegramId)));
+                .orElseThrow(() -> new HttpException("User by telegram id %d not found".formatted(telegramId), HttpStatus.NOT_FOUND));
     }
 
     public List<PersonResponse> readAll() {
