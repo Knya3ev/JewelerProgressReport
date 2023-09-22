@@ -1,6 +1,6 @@
 package com.example.JewelerProgressReport.util.validation;
 
-import com.example.JewelerProgressReport.model.typeEnum.TypeOfOperation;
+import com.example.JewelerProgressReport.jewelry.enums.TypeOfOperation;
 import com.example.JewelerProgressReport.util.validation.custom_annotation.TypeOperation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

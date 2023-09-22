@@ -18,3 +18,19 @@ spring:
     properties:
       hibernate:
         ddl-auto: validate
+
+
+client:
+  epl:
+    host: https://epldiamond.ru/
+    search: /search
+
+parser:
+  epl:
+    first-selector-for-image: body > div.l-wrapper > section.l-content.js-content > div > div.search-page.js-data > ul > li > div > a > img
+    image-not-found-url: /local/templates/.default/img/no_picture_big.png
+
+    link-product: body > div.l-wrapper > section.l-content.js-content > div > div.search-page.js-data > ul > li > div > div > div > a
+    second-selector-for-image: body > div.l-wrapper > section.l-content.js-content > div > div.b-card-page.js-card-page > div.b-card-page__row > div.b-card-page__views > div > div > div.b-card-page__views-container > ul > li:nth-child(1) > a > img
+
+    count: body > div.l-wrapper > section.l-content.js-content > div > div.search-page.js-data > div

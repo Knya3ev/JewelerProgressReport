@@ -1,12 +1,12 @@
 package com.example.JewelerProgressReport.util.map;
 
-import com.example.JewelerProgressReport.entity.Report;
-import com.example.JewelerProgressReport.model.request.ReportRequest;
-import com.example.JewelerProgressReport.model.response.ReportResponse;
-import com.example.JewelerProgressReport.model.typeEnum.TypeOfJewelry;
-import com.example.JewelerProgressReport.model.typeEnum.TypeOfMetalColor;
-import com.example.JewelerProgressReport.model.typeEnum.TypeOfOperation;
-import com.example.JewelerProgressReport.service.SizeRingService;
+import com.example.JewelerProgressReport.documents.Report;
+import com.example.JewelerProgressReport.documents.request.ReportRequest;
+import com.example.JewelerProgressReport.documents.response.ReportResponse;
+import com.example.JewelerProgressReport.jewelry.enums.TypeOfJewelry;
+import com.example.JewelerProgressReport.jewelry.enums.TypeOfMetalColor;
+import com.example.JewelerProgressReport.jewelry.enums.TypeOfOperation;
+import com.example.JewelerProgressReport.jewelry.SizeRingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.JewelerProgressReport.model.typeEnum.TypeOfOperation.*;
+import static com.example.JewelerProgressReport.jewelry.enums.TypeOfOperation.*;
 
 @Service
 @RequiredArgsConstructor
