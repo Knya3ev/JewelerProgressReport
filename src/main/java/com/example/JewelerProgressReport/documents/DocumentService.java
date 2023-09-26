@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +25,11 @@ public class DocumentService {
     private final ReportRepository reportRepository;
     private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
+
     private final String[] HEADER = {
             "дата",
             "изделие",
+            "металл",
             "количество",
             "номер телефона клиента",
             "коррекция размера",
@@ -82,24 +85,30 @@ public class DocumentService {
             data.setCellValue(report.getCreatedDate().format(dateFormat));
 
             Cell typeProduct = row.createCell(1);
-            typeProduct.setCellValue(report.getTypeProduct());
+            typeProduct.setCellValue(report.getJewelleryProduct().getRu());
 
-            Cell count = row.createCell(2);
+            Cell typeMetal = row.createCell(2);
+            typeMetal.setCellValue(report.getMetal().getRu());
+
+            Cell count = row.createCell(3);
             count.setCellValue(report.getCount());
 
-            Cell phoneNumber = row.createCell(3);
+            Cell phoneNumber = row.createCell(4);
             phoneNumber.setCellValue(report.getClient().getNumberPhone());
 
-            Cell resize = row.createCell(4);
+            Cell resize = row.createCell(5);
             resize.setCellValue(report.getResize() == null ? "" : report.getResize().getRingResizing());
 
-            Cell typeOfOperation = row.createCell(5);
-            typeOfOperation.setCellValue(report.getTypeOfOperation());
+            Cell typeOfOperation = row.createCell(6);
+            typeOfOperation.setCellValue(
+                    String.join(", ", report.getJewelleryOperations()
+                            .stream().map(operation -> operation.getRu()).collect(Collectors.toList()))
+            );
 
-            Cell details = row.createCell(6);
+            Cell details = row.createCell(7);
             details.setCellValue(report.getDetailsOfOperation());
 
-            Cell unionCode = row.createCell(7);
+            Cell unionCode = row.createCell(8);
             unionCode.setCellValue(report.getUnionCodeJewelry());
         }
 

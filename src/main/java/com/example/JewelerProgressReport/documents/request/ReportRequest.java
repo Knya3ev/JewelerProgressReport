@@ -4,6 +4,7 @@ package com.example.JewelerProgressReport.documents.request;
 import com.example.JewelerProgressReport.util.validation.custom_annotation.TypeMetalColor;
 import com.example.JewelerProgressReport.util.validation.custom_annotation.TypeOperation;
 import com.example.JewelerProgressReport.util.validation.custom_annotation.TypeProduct;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
@@ -15,13 +16,13 @@ import java.util.List;
 public class ReportRequest {
 
     @TypeProduct
-    private String typeProduct;
+    private String jewelleryProduct;
 
     @TypeMetalColor
-    private String typeOfMetalColor;
+    private String metal;
 
     @TypeOperation
-    private List<String> typeOfOperation;
+    private List<String> jewelleryOperation;
 
     @NotNull(message = "the phone field cannot be empty")
     @Pattern(regexp = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$", message = "phone not correct")
@@ -31,5 +32,6 @@ public class ReportRequest {
     private Double sizeBefore;
     private Double sizeAfter;
     private String unionCodeJewelry;
+    @NotBlank(message = "article cannot be empty")
     private String article;
 }

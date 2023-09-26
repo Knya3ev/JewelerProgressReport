@@ -1,4 +1,4 @@
-package com.example.JewelerProgressReport.jewelry;
+package com.example.JewelerProgressReport.jewelry.resize;
 
 
 import com.example.JewelerProgressReport.documents.Report;

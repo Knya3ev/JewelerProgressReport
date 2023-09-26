@@ -3,22 +3,19 @@ package com.example.JewelerProgressReport.util.map;
 import com.example.JewelerProgressReport.documents.Report;
 import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.documents.response.ReportResponse;
-import com.example.JewelerProgressReport.jewelry.enums.TypeOfJewelry;
-import com.example.JewelerProgressReport.jewelry.enums.TypeOfMetalColor;
-import com.example.JewelerProgressReport.jewelry.enums.TypeOfOperation;
-import com.example.JewelerProgressReport.jewelry.SizeRingService;
+import com.example.JewelerProgressReport.jewelry.enums.JewelleryProduct;
+import com.example.JewelerProgressReport.jewelry.enums.Metal;
+import com.example.JewelerProgressReport.jewelry.enums.JewelleryOperation;
+import com.example.JewelerProgressReport.jewelry.resize.SizeRingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.example.JewelerProgressReport.jewelry.enums.TypeOfOperation.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,21 +25,16 @@ public class ReportMapper {
 
     public Report toReport(ReportRequest reportRequest) {
 
-        List<String> standardOperation = this.getStandardOperation(reportRequest.getTypeOfMetalColor());
-        standardOperation.addAll(0, reportRequest.getTypeOfOperation());
+        List<JewelleryOperation> operations = reportRequest.getJewelleryOperation()
+                .stream().map(operation -> JewelleryOperation.fromCode(operation)).collect(Collectors.toList());
 
-
-        List<String> newList = standardOperation.stream()
-                .map(operation -> TypeOfOperation.valueOf(operation).getRu())
-                .collect(Collectors.toList());
-
+        operations.addAll(0, JewelleryOperation.getStandardOperation(reportRequest.getMetal()));
 
         return Report.builder()
-                .typeProduct(TypeOfJewelry.valueOf(reportRequest.getTypeProduct()).getRu())
-                .typeOfMetalColor(TypeOfMetalColor.valueOf(reportRequest.getTypeOfMetalColor()).getRu())
-                .typeOfOperation(String.join(", ", newList))
+                .jewelleryProduct(JewelleryProduct.fromCode(reportRequest.getJewelleryProduct()))
+                .metal(Metal.fromCode(reportRequest.getMetal()))
+                .jewelleryOperations(operations)
                 .detailsOfOperation(reportRequest.getDetailsOfOperation())
-
 
                 .resize(reportRequest.getSizeBefore() != null && reportRequest.getSizeAfter() != null ?
                         sizeRingService.checkoutSizeRingOrCreate(reportRequest.getSizeBefore(), reportRequest.getSizeAfter())
@@ -64,9 +56,13 @@ public class ReportMapper {
         ReportResponse reportResponse = new ReportResponse();
 
         reportResponse.setId(report.getId());
-        reportResponse.setTypeProduct(report.getTypeProduct());
-        reportResponse.setTypeOfMetalColor(report.getTypeOfMetalColor());
-        reportResponse.setTypeOfOperation(report.getTypeOfOperation());
+        reportResponse.setJewelleryProduct(report.getJewelleryProduct().getRu());
+        reportResponse.setMetal(report.getMetal().getRu());
+        reportResponse.setJewelleryOperation(
+                String.join(", ", report.getJewelleryOperations().stream()
+                        .map(operation -> operation.getRu())
+                        .collect(Collectors.toList()))
+        );
         reportResponse.setDetailsOfOperation(report.getDetailsOfOperation());
         reportResponse.setUnionCodeJewelry(report.getUnionCodeJewelry());
         reportResponse.setPhoneNumber(report.getClient().getNumberPhone());
@@ -92,14 +88,5 @@ public class ReportMapper {
         }
 
         return list;
-    }
-
-    private List<String> getStandardOperation(String metalColor) {
-        TypeOfMetalColor typeOfMetalColor = TypeOfMetalColor.valueOf(metalColor);
-
-        if (typeOfMetalColor == TypeOfMetalColor.white) {
-            return new ArrayList<>(Arrays.asList(cleaning.get(), polishing.get(),
-                    rhodiumPlating.get()));
-        } else return new ArrayList<>(Arrays.asList(cleaning.get(), polishing.get()));
     }
 }

@@ -1,6 +1,6 @@
 package com.example.JewelerProgressReport.util.validation;
 
-import com.example.JewelerProgressReport.jewelry.enums.TypeOfOperation;
+import com.example.JewelerProgressReport.jewelry.enums.JewelleryOperation;
 import com.example.JewelerProgressReport.util.validation.custom_annotation.TypeOperation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -19,10 +19,14 @@ public class CustomValidationTypeOperation implements ConstraintValidator<TypeOp
 
         context.disableDefaultConstraintViolation();
 
+        if (value == null) {
+            return true;
+        }
+
         int i = 0;
         try {
             for (String item : value) {
-                EnumUtils.findEnumInsensitiveCase(TypeOfOperation.class, item);
+                JewelleryOperation.fromCode(item);
                 i++;
             }
         } catch (IllegalArgumentException e) {

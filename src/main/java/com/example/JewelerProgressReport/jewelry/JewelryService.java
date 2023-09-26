@@ -2,6 +2,8 @@ package com.example.JewelerProgressReport.jewelry;
 
 
 import com.example.JewelerProgressReport.exception.HttpException;
+import com.example.JewelerProgressReport.jewelry.resize.Resize;
+import com.example.JewelerProgressReport.jewelry.resize.SizeRingService;
 import com.example.JewelerProgressReport.users.client.Client;
 import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import jakarta.transaction.Transactional;
@@ -24,7 +26,7 @@ public class JewelryService {
                 && reportRequest.getSizeBefore() != null
                 && reportRequest.getSizeAfter() != null) {
 
-            Jewelry jewelry = this.checkoutJewelryOrCreate(reportRequest.getArticle(), reportRequest.getTypeProduct());
+            Jewelry jewelry = this.checkoutJewelryOrCreate(reportRequest.getArticle(), reportRequest.getJewelleryProduct());
 
             this.addSizeRing(reportRequest, jewelry);
             client.addJewelry(jewelry);
@@ -39,7 +41,7 @@ public class JewelryService {
     private Jewelry checkoutJewelryOrCreate(String article, String typeJewelry){
         try{
             return read(article);
-        }catch (JewelryNotFoundException e){
+        }catch (HttpException e){
             Jewelry jewelry = new Jewelry(article,typeJewelry);
             this.create(jewelry);
             return jewelry;

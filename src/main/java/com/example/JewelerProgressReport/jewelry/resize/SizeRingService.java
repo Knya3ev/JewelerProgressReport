@@ -1,4 +1,4 @@
-package com.example.JewelerProgressReport.jewelry;
+package com.example.JewelerProgressReport.jewelry.resize;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

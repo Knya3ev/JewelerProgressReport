@@ -1,6 +1,5 @@
-package com.example.JewelerProgressReport.jewelry;
+package com.example.JewelerProgressReport.jewelry.resize;
 
-import com.example.JewelerProgressReport.jewelry.Resize;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

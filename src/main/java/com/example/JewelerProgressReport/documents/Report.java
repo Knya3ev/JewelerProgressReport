@@ -1,14 +1,18 @@
 package com.example.JewelerProgressReport.documents;
 
 
+import com.example.JewelerProgressReport.jewelry.enums.JewelleryProduct;
+import com.example.JewelerProgressReport.jewelry.enums.JewelleryOperation;
+import com.example.JewelerProgressReport.jewelry.enums.Metal;
 import com.example.JewelerProgressReport.users.client.Client;
 import com.example.JewelerProgressReport.users.person.Person;
-import com.example.JewelerProgressReport.jewelry.Resize;
+import com.example.JewelerProgressReport.jewelry.resize.Resize;
 import lombok.*;
 
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,13 +33,13 @@ public class Report {
     private int count; //  количество изделий
 
     @Column(name = "type_product")
-    private String typeProduct; // тип изделия
+    private JewelleryProduct jewelleryProduct; // тип изделия
 
     @Column(name = "type_of_metal_color")
-    private String typeOfMetalColor; // цвет изделия(металла)
+    private Metal metal; // цвет изделия(металла)
 
     @Column(name = "type_of_operation")
-    private String typeOfOperation; // тип операции
+    private List<JewelleryOperation> jewelleryOperations; // тип операции
 
     @Column(name = "details_of_operation")
     private String detailsOfOperation; // подробности операции
@@ -68,7 +72,10 @@ public class Report {
     public void removePersonAndClientAndResizes() {
         person.removeReport(this);
         client.removeReport(this);
-        resize.removeReport(this);
+
+        if(this.resize != null) {
+            resize.removeReport(this);
+        }
     }
 
 }

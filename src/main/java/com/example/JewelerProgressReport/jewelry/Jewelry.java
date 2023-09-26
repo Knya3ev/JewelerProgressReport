@@ -1,6 +1,7 @@
 package com.example.JewelerProgressReport.jewelry;
 
 
+import com.example.JewelerProgressReport.jewelry.resize.Resize;
 import com.example.JewelerProgressReport.users.client.Client;
 import jakarta.persistence.*;
 import lombok.Getter;

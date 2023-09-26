@@ -7,7 +7,7 @@ import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.users.client.ClientService;
 import com.example.JewelerProgressReport.jewelry.JewelryService;
 import com.example.JewelerProgressReport.users.person.PersonService;
-import com.example.JewelerProgressReport.jewelry.SizeRingService;
+import com.example.JewelerProgressReport.jewelry.resize.SizeRingService;
 import com.example.JewelerProgressReport.util.map.ReportMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ public class ReportService {
 
 
     @Transactional
-    public void create(Long personId, ReportRequest reportRequest) {
+    public Report create(Long personId, ReportRequest reportRequest) {
         Person person = personService.read(personId);
         Report report = reportMapper.toReport(reportRequest);
         Client client = clientService.checkoutClientOrCreate(reportRequest.getPhoneNumber());
@@ -42,6 +42,7 @@ public class ReportService {
         jewelryService.createJewelryIfIsNotNullArticle(client, reportRequest);
 
         reportRepository.save(report);
+        return report;
     }
 
 
@@ -61,9 +62,9 @@ public class ReportService {
 
         Report report = reportMapper.toReport(reportRequest);
 
-        reportUpdate.setTypeProduct(report.getTypeProduct());
-        reportUpdate.setTypeOfMetalColor(report.getTypeOfMetalColor());
-        reportUpdate.setTypeOfOperation(report.getTypeOfOperation());
+        reportUpdate.setJewelleryProduct(report.getJewelleryProduct());
+        reportUpdate.setMetal(report.getMetal());
+        reportUpdate.setJewelleryOperations(report.getJewelleryOperations());
         reportUpdate.setDetailsOfOperation(report.getDetailsOfOperation());
         reportUpdate.setResize(sizeRingService.checkoutSizeRingOrCreate(report.getResize().getBefore(), report.getResize().getAfter()));
         reportUpdate.setUnionCodeJewelry(report.getUnionCodeJewelry());

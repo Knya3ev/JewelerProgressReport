@@ -58,7 +58,7 @@ public class ClientService {
             if (!updateForReport) clientRepository.updateLastVisitAndCountVisit(client.getId());
             return client;
 
-        }catch (ClientNotFoundException e){
+        }catch (HttpException e){
 
             Client client = new Client(replacedPhoneNumber, LocalDateTime.now());
             this.create(client);
