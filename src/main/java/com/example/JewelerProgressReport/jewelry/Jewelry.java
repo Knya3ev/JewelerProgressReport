@@ -1,9 +1,19 @@
 package com.example.JewelerProgressReport.jewelry;
 
 
+import com.example.JewelerProgressReport.jewelry.enums.JewelleryProduct;
 import com.example.JewelerProgressReport.jewelry.resize.Resize;
 import com.example.JewelerProgressReport.users.client.Client;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,7 +41,7 @@ public class Jewelry {
     private URI image;
 
     @Column(name = "type_jewelry")
-    private String typeJewelry;
+    private JewelleryProduct jewelleryProduct;
 
     @ManyToMany
     @JoinTable(name = "jewelry_client",
@@ -45,9 +55,9 @@ public class Jewelry {
             inverseJoinColumns = @JoinColumn(name = "resize_id"))
     private Set<Resize> resizes = new HashSet<>();
 
-    public Jewelry(String article, String typeJewelry) {
+    public Jewelry(String article, JewelleryProduct jewelleryProduct) {
         this.article = article;
-        this.typeJewelry = typeJewelry;
+        this.jewelleryProduct = jewelleryProduct;
     }
 
     public void addSizeRing(Resize resize) {

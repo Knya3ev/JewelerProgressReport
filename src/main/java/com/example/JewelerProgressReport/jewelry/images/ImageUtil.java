@@ -1,4 +1,4 @@
-package com.example.JewelerProgressReport.images;
+package com.example.JewelerProgressReport.jewelry.images;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;

@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: add_shop_person_fk
+      author: Mikhail Knyazev
+      changes:
+        - renameColumn:
+            tableName: report
+            oldColumnName: type_product
+            newColumnName: jewelleryProduct
+        - renameColumn:
+            tableName: report
+            oldColumnName: type_of_metal_color
+            newColumnName: metal
+        - renameColumn:
+            tableName: report
+            oldColumnName: type_of_operation
+            newColumnName: jewelleryOperations

@@ -1,6 +1,8 @@
-package com.example.JewelerProgressReport.documents;
+package com.example.JewelerProgressReport.documents.documentXML_generation;
 
 
+import com.example.JewelerProgressReport.documents.Report;
+import com.example.JewelerProgressReport.documents.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;

@@ -32,13 +32,13 @@ public class Report {
     @Column(name = "count")
     private int count; //  количество изделий
 
-    @Column(name = "type_product")
+    @Column(name = "jewellery_product")
     private JewelleryProduct jewelleryProduct; // тип изделия
 
-    @Column(name = "type_of_metal_color")
+    @Column(name = "metal")
     private Metal metal; // цвет изделия(металла)
 
-    @Column(name = "type_of_operation")
+    @Column(name = "jewellery_operations")
     private List<JewelleryOperation> jewelleryOperations; // тип операции
 
     @Column(name = "details_of_operation")

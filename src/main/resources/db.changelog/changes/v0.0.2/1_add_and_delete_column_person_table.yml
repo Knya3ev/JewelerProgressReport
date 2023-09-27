@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: add_and_delete_column_person_table
+      author: Mikhail Knyazev
+      changes:
+        - addColumn:
+            tableName: person
+            columns:
+              - column:
+                  name: shop
+                  type: BIGINT
+              - column:
+                  name: count_shops
+                  type: INTEGER
+                  defaultValueNumeric: 0
+
+        - dropColumn:
+            tableName: person
+            columnName: address
+

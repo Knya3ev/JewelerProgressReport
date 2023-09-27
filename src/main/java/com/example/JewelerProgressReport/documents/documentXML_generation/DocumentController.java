@@ -1,4 +1,4 @@
-package com.example.JewelerProgressReport.documents;
+package com.example.JewelerProgressReport.documents.documentXML_generation;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;

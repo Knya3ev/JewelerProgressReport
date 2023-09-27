@@ -1,5 +1,7 @@
 package com.example.JewelerProgressReport.documents.response;
-import lombok.*;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 

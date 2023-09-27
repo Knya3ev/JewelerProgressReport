@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_shop_table
+      author: Mikhail Knyazev
+      changes:
+        - createSequence:
+            sequenceName: person_seq
+            dataType: bigint
+            startValue: 1
+            incrementBy: 1
+            minValue: 1
+            maxValue: 9223372036854775807
+            cycle: false
+            cacheSize: 1
+
+        - createTable:
+            tableName: shop
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: shop_pk
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: number_of_administrators
+                  type: INTEGER
+                  defaultValueNumeric: 0
+              - column:
+                  name: number_of_shop_assistant
+                  type: INTEGER
+                  defaultValueNumeric: 0
+              - column:
+                  name: number_of_jeweler_master
+                  type: INTEGER
+                  defaultValueNumeric: 0
+              - column:
+                  name: is_have_jeweler
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+              - column:
+                  name: director_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: shop_director_fk
+              - column:
+                  name: paid_subscription_validity_period
+                  type: TIMESTAMP

@@ -20,8 +20,10 @@ public class PersonService {
 
 
     @Transactional
-    public void create(CreatePersonRequest person) {
-        personRepository.save(personMapper.toPerson(person));
+    public Person create(CreatePersonRequest request) {
+        Person person = personMapper.toPerson(request);
+        personRepository.save(person);
+        return person;
     }
 
     public Person read(Long id) {
@@ -34,19 +36,20 @@ public class PersonService {
                 .orElseThrow(() -> new HttpException("User by telegram id %d not found".formatted(telegramId), HttpStatus.NOT_FOUND));
     }
 
-    public List<PersonResponse> readAll() {
-        return personMapper.toPersonResponseList(personRepository.findAll());
+    public List<Person> readAll() {
+        return personRepository.findAll();
     }
 
     @Transactional
-    public void update(CreatePersonRequest createPersonRequest, Long id) {
+    public Person update(CreatePersonRequest createPersonRequest, Long id) {
         Person personUpdate = this.read(id);
         Person request = personMapper.toPerson(createPersonRequest);
 
         personUpdate.setUsername(request.getUsername());
         personUpdate.setFirstname(request.getFirstname());
         personUpdate.setPhoneNumber(request.getPhoneNumber());
-        personUpdate.setAddress(request.getAddress());
+
+        return personUpdate;
     }
 
     @Transactional

@@ -28,6 +28,8 @@ public class ReportMapper {
         List<JewelleryOperation> operations = reportRequest.getJewelleryOperation()
                 .stream().map(operation -> JewelleryOperation.fromCode(operation)).collect(Collectors.toList());
 
+        //TODO: реализовать проверку if(item != консультация)
+
         operations.addAll(0, JewelleryOperation.getStandardOperation(reportRequest.getMetal()));
 
         return Report.builder()

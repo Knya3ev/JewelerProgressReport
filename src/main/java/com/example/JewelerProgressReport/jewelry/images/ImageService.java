@@ -1,11 +1,8 @@
-package com.example.JewelerProgressReport.images;
+package com.example.JewelerProgressReport.jewelry.images;
 
 
 import com.example.JewelerProgressReport.parser.ParserService;
-import io.swagger.v3.oas.annotations.servers.Server;
-import liquibase.resource.ResourceAccessor;
 import lombok.RequiredArgsConstructor;
-import org.jsoup.HttpStatusException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;

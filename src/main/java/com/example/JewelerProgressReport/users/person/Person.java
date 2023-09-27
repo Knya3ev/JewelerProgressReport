@@ -2,8 +2,21 @@ package com.example.JewelerProgressReport.users.person;
 
 
 import com.example.JewelerProgressReport.documents.Report;
-import jakarta.persistence.*;
-import lombok.*;
+import com.example.JewelerProgressReport.shop.Shop;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,16 +38,23 @@ public class Person {
     private String username;
     @Column(name = "firstname")
     private String firstname;
-    @Column(name = "address")
-    private String address;
     @Column(name = "telegram_id")
     private String telegramId;
     @Column(name = "phone_number")
     private String phoneNumber;
     @Column(name = "is_verification")
-    private boolean isVerification = false;
+    private boolean isVerification = false; // возможно убрать, реализация будет через role
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
     private List<Report> reports = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Shop shop; // belonging of a person to a store
+
+    @OneToMany(mappedBy = "director", fetch = FetchType.LAZY)
+    private List<Shop> shopOwnership = new ArrayList<>();
+
+    @Column(name = "count_shops")
+    private int countShops;
 
     public void addReport(Report report) {
         reports.add(report);

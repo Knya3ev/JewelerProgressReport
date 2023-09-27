@@ -2,6 +2,7 @@ package com.example.JewelerProgressReport.jewelry;
 
 
 import com.example.JewelerProgressReport.exception.HttpException;
+import com.example.JewelerProgressReport.jewelry.enums.JewelleryProduct;
 import com.example.JewelerProgressReport.jewelry.resize.Resize;
 import com.example.JewelerProgressReport.jewelry.resize.SizeRingService;
 import com.example.JewelerProgressReport.users.client.Client;
@@ -26,7 +27,10 @@ public class JewelryService {
                 && reportRequest.getSizeBefore() != null
                 && reportRequest.getSizeAfter() != null) {
 
-            Jewelry jewelry = this.checkoutJewelryOrCreate(reportRequest.getArticle(), reportRequest.getJewelleryProduct());
+            Jewelry jewelry = this.checkoutJewelryOrCreate(
+                    reportRequest.getArticle(),
+                    JewelleryProduct.fromCode(reportRequest.getJewelleryProduct())
+            );
 
             this.addSizeRing(reportRequest, jewelry);
             client.addJewelry(jewelry);
@@ -38,11 +42,11 @@ public class JewelryService {
         jewelryRepository.save(jewelry);
     }
 
-    private Jewelry checkoutJewelryOrCreate(String article, String typeJewelry){
+    private Jewelry checkoutJewelryOrCreate(String article, JewelleryProduct jewelleryProduct){
         try{
             return read(article);
         }catch (HttpException e){
-            Jewelry jewelry = new Jewelry(article,typeJewelry);
+            Jewelry jewelry = new Jewelry(article,jewelleryProduct);
             this.create(jewelry);
             return jewelry;
         }
