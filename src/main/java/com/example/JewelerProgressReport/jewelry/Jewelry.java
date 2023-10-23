@@ -24,7 +24,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@Table(name = "jewelry")
+@Table(name = "jewelry", schema = "public")
 @Entity
 @NoArgsConstructor
 public class Jewelry {

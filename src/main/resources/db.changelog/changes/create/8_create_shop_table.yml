@@ -54,3 +54,11 @@ databaseChangeLog:
               - column:
                   name: paid_subscription_validity_period
                   type: TIMESTAMP
+
+        - addForeignKeyConstraint:
+            baseTableName: shop
+            baseColumnNames: director_id
+            constraintName: shop_director_fk
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE

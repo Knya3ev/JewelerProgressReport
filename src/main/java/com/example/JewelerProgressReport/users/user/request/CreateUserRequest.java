@@ -1,11 +1,11 @@
-package com.example.JewelerProgressReport.users.person.request;
+package com.example.JewelerProgressReport.users.user.request;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Getter
 @Setter
-public class CreatePersonRequest {
+public class CreateUserRequest {
 
     @NotNull
     private String username;
@@ -15,9 +15,6 @@ public class CreatePersonRequest {
 
     @NotNull
     private String telegramId;
-
-    @NotNull
-    private String address;
 
     @NotNull(message = "the phone field cannot be empty")
     @Pattern(regexp = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$", message = "phone not correct")

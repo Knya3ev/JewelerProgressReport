@@ -1,11 +1,11 @@
 databaseChangeLog:
   - changeSet:
-      id: create_person_table
+      id: create_users_table
       author: Mikhail Knyazev
       changes:
 
         - createSequence:
-            sequenceName: person_seq
+            sequenceName: users_seq
             dataType: bigint
             startValue: 1
             incrementBy: 1
@@ -15,7 +15,7 @@ databaseChangeLog:
             cacheSize: 1
 
         - createTable:
-            tableName: person
+            tableName: users
             columns:
               - column:
                   name: id
@@ -23,7 +23,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
-                    primaryKeyName: person_pk
+                    primaryKeyName: users_pk
 
               - column:
                   name: username
@@ -31,9 +31,6 @@ databaseChangeLog:
               - column:
                   name: firstname
                   type: VARCHAR(50)
-              - column:
-                  name: address
-                  type: VARCHAR(100)
               - column:
                   name: telegram_id
                   type: VARCHAR(100)
@@ -48,5 +45,12 @@ databaseChangeLog:
                   name: is_verification
                   type: BOOLEAN
                   defaultValueBoolean: false
+              - column:
+                  name: shop_id
+                  type: BIGINT
+              - column:
+                  name: count_shops
+                  type: INTEGER
+                  defaultValueNumeric: 0
 
 

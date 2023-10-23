@@ -2,11 +2,11 @@ package com.example.JewelerProgressReport.documents;
 
 import com.example.JewelerProgressReport.exception.HttpException;
 import com.example.JewelerProgressReport.users.client.Client;
-import com.example.JewelerProgressReport.users.person.Person;
+import com.example.JewelerProgressReport.users.user.User;
 import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.users.client.ClientService;
 import com.example.JewelerProgressReport.jewelry.JewelryService;
-import com.example.JewelerProgressReport.users.person.PersonService;
+import com.example.JewelerProgressReport.users.user.UserService;
 import com.example.JewelerProgressReport.jewelry.resize.SizeRingService;
 import com.example.JewelerProgressReport.util.map.ReportMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import java.util.List;
 public class ReportService {
     private final ReportRepository reportRepository;
     private final ClientService clientService;
-    private final PersonService personService;
+    private final UserService userService;
     private final JewelryService jewelryService;
 
     private final SizeRingService sizeRingService;
@@ -32,12 +32,12 @@ public class ReportService {
 
     @Transactional
     public Report create(Long personId, ReportRequest reportRequest) {
-        Person person = personService.read(personId);
+        User user = userService.read(personId);
         Report report = reportMapper.toReport(reportRequest);
         Client client = clientService.checkoutClientOrCreate(reportRequest.getPhoneNumber());
 
         client.addReports(report);
-        person.addReport(report);
+        user.addReport(report);
 
         jewelryService.createJewelryIfIsNotNullArticle(client, reportRequest);
 

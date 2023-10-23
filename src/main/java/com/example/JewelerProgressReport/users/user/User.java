@@ -1,4 +1,4 @@
-package com.example.JewelerProgressReport.users.person;
+package com.example.JewelerProgressReport.users.user;
 
 
 import com.example.JewelerProgressReport.documents.Report;
@@ -9,7 +9,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -23,15 +22,15 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "person")
+@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Person {
+public class User {
     @Id
-    @SequenceGenerator(allocationSize = 1, name = "person_seq", sequenceName = "person_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "person_seq")
+    @SequenceGenerator(allocationSize = 1, name = "users_seq", sequenceName = "users_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
     @Column(name = "id")
     private Long id;
     @Column(name = "username")
@@ -44,11 +43,8 @@ public class Person {
     private String phoneNumber;
     @Column(name = "is_verification")
     private boolean isVerification = false; // возможно убрать, реализация будет через role
-    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Report> reports = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Shop shop; // belonging of a person to a store
 
     @OneToMany(mappedBy = "director", fetch = FetchType.LAZY)
     private List<Shop> shopOwnership = new ArrayList<>();
@@ -58,12 +54,12 @@ public class Person {
 
     public void addReport(Report report) {
         reports.add(report);
-        report.setPerson(this);
+        report.setUser(this);
     }
 
     public void removeReport(Report report) {
         reports.remove(report);
-        report.setPerson(null);
+        report.setUser(null);
     }
     //TODO: реализовать возможность добавлять сотрудников
 

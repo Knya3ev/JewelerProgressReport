@@ -10,8 +10,6 @@ import org.mapstruct.factory.Mappers;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface JewelryMapper {
 
-    JewelryMapper INSTANCE = Mappers.getMapper(JewelryMapper.class);
-
     @Mapping(target = "resizes", expression = "java(jewelry.getResizes().stream().map(i -> i.getRingResizing()).toList())")
     @Mapping(target = "jewelleryProduct", expression = "java(jewelry.getJewelleryProduct().getRu())")
     JewelryResponse toJewelryResponse(Jewelry jewelry);

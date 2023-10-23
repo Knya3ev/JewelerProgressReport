@@ -1,4 +1,4 @@
-package com.example.JewelerProgressReport.config;
+package com.example.JewelerProgressReport.parser.config;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

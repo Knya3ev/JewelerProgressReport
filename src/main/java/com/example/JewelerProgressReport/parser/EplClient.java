@@ -1,7 +1,7 @@
 package com.example.JewelerProgressReport.parser;
 
 
-import com.example.JewelerProgressReport.config.FeignConfiguration;
+import com.example.JewelerProgressReport.parser.config.FeignConfiguration;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

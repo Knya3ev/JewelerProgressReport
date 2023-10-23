@@ -28,13 +28,13 @@ databaseChangeLog:
                   name: count
                   type: INTEGER
               - column:
-                  name: type_product
+                  name: jewellery_product
                   type: VARCHAR(50)
               - column:
-                  name: type_of_metal_color
+                  name: metal
                   type: VARCHAR(20)
               - column:
-                  name: type_of_operation
+                  name: jewellery_operations
                   type: VARCHAR(255)
               - column:
                   name: details_of_operation
@@ -65,11 +65,11 @@ databaseChangeLog:
                     foreignKeyName: report_client_fk
 
               - column:
-                  name: person_id
+                  name: user_id
                   type: BIGINT
                   constraints:
                     nullable: false
-                    foreignKeyName: report_person_fk
+                    foreignKeyName: report_user_fk
 
               - column:
                   name: resize_id
@@ -89,9 +89,9 @@ databaseChangeLog:
 
         - addForeignKeyConstraint:
             baseTableName: report
-            baseColumnNames: person_id
-            constraintName: report_person_fk
-            referencedTableName: person
+            baseColumnNames: user_id
+            constraintName: report_users_fk
+            referencedTableName: users
             referencedColumnNames: id
             onDelete: CASCADE
 

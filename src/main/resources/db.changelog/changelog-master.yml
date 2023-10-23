@@ -1,6 +1,6 @@
 databaseChangeLog:
   - includeAll:
-      path: /db.changelog/changes/
+      path: /db.changelog/changes/create
 
 
 

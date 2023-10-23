@@ -5,7 +5,7 @@ import com.example.JewelerProgressReport.jewelry.enums.JewelleryProduct;
 import com.example.JewelerProgressReport.jewelry.enums.JewelleryOperation;
 import com.example.JewelerProgressReport.jewelry.enums.Metal;
 import com.example.JewelerProgressReport.users.client.Client;
-import com.example.JewelerProgressReport.users.person.Person;
+import com.example.JewelerProgressReport.users.user.User;
 import com.example.JewelerProgressReport.jewelry.resize.Resize;
 import lombok.*;
 
@@ -21,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Table(name = "report")
+@Table(name = "report", schema = "public")
 public class Report {
     @Id
     @SequenceGenerator(allocationSize = 1, name = "report_seq", sequenceName = "report_seq")
@@ -64,13 +64,13 @@ public class Report {
     @ManyToOne(fetch = FetchType.LAZY)
     private Resize resize;
     @ManyToOne(fetch = FetchType.LAZY)
-    private Person person;
+    private User user;
     @ManyToOne(fetch = FetchType.LAZY)
     private Client client;
 
 
     public void removePersonAndClientAndResizes() {
-        person.removeReport(this);
+        user.removeReport(this);
         client.removeReport(this);
 
         if(this.resize != null) {

@@ -22,14 +22,14 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     @Query("""
             SELECT r
             FROM Report r
-            WHERE r.person.id = :personId
+            WHERE r.user.id = :personId
             """)
     List<Report> findByReportsByIdPerson(@Param("personId") Long id);
 
     @Query("""
             SELECT r FROM
             Report r
-            WHERE r.createdDate >= :startDate AND r.createdDate <= :endDate AND r.person.id = :personId
+            WHERE r.createdDate >= :startDate AND r.createdDate <= :endDate AND r.user.id = :personId
             """)
     List<Report> getListForDocument(
             @Param("startDate") LocalDateTime startDate,
