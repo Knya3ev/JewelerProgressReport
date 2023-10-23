@@ -53,21 +53,15 @@ public class ShopService {
                 throw new HttpException("a shop with the name '%s' already exists. "
                         .formatted(shopRequest.getName()), HttpStatus.BAD_REQUEST);
             }
+
             Shop shop = shopRepository.save(toShop(shopRequest, userId));
+            director.getShopOwnership().add(shop);
+
             return toResponse(shop);
         }
 
         throw new HttpException("You can't create a shop, your limit for creating shops: %d"
                 .formatted(director.getCountShops()), HttpStatus.BAD_REQUEST);
-    }
-
-    @Transactional
-    public ShopResponse appointDirector(Long shopId, Long userId) {
-        User director = userService.getUser(userId);
-        Shop shop = getShop(shopId);
-        director.getShopOwnership().add(shop);
-
-        return toResponse(shop);
     }
 
     @Transactional
@@ -117,9 +111,8 @@ public class ShopService {
     }
 
     @Transactional
-    public ShopResponse giveAccessToAddJeweller(Long shopId) {
+    public void giveAccessToAddJeweller(Long shopId) {
         shopRepository.accessAddJeweler(shopId);
-        return toResponse(getShop(shopId));
     }
 
     @Transactional

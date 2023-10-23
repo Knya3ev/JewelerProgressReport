@@ -6,6 +6,7 @@ import com.example.JewelerProgressReport.users.user.response.UserResponse;
 import com.example.JewelerProgressReport.util.map.UserMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -27,35 +29,44 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
+
     @Operation(summary = "Create User")
-    @PostMapping()
-    public ResponseEntity<User> create(@RequestBody @Validated CreateUserRequest createUserRequest){
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> create(@RequestBody @Validated CreateUserRequest createUserRequest) {
         return ResponseEntity.ok().body(userService.create(createUserRequest));
     }
 
     @Operation(summary = "Get by User id ")
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getById(@PathVariable("id") Long id){
-        return ResponseEntity.ok().body(userMapper.toUserResponse(userService.getUser(id)));
+    @GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserResponse> getById(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok().body(userMapper.toUserResponse(userService.getUser(userId)));
     }
 
     @Operation(summary = "Get all Users")
-    @GetMapping("/all")
-    public ResponseEntity<List<UserResponse>> getAll(){
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserResponse>> getAll() {
         return ResponseEntity.ok().body(userMapper.toUserResponseList(userService.readAll()));
     }
 
     @Operation(summary = "Remove by User id")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id){
-        userService.delete(id);
-        return  ResponseEntity.ok().build();
+    @DeleteMapping(value = "/{userId}")
+    public ResponseEntity<Void> delete(@PathVariable("userId") Long userId) {
+        userService.delete(userId);
+        return ResponseEntity.ok().build();
     }
 
-    @Operation (summary = "Update by User id ")
-    @PatchMapping("/{id}")
-    public ResponseEntity<UserResponse> update(@PathVariable("id") Long id,
-                                               @RequestBody @Validated CreateUserRequest createUserRequest){
-        return ResponseEntity.ok().body(userMapper.toUserResponse(userService.update(createUserRequest,id)));
+    @Operation(summary = "Update by User id ")
+    @PatchMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserResponse> update(@PathVariable("userId") Long id,
+                                               @RequestBody @Validated CreateUserRequest createUserRequest) {
+        return ResponseEntity.ok().body(userMapper.toUserResponse(userService.update(createUserRequest, id)));
+    }
+
+    @Operation(summary = "change the number of shops for the user")
+    @PostMapping(value = "/{userId}/edit/shops")
+    public ResponseEntity<Void> editCountShopDirector(@PathVariable("userId") Long userId,
+                                                      @RequestParam("count") int count) {
+        userService.editCountShopDirector(userId, count);
+        return ResponseEntity.ok().build();
     }
 }

@@ -24,9 +24,7 @@ public class ReportService {
     private final ClientService clientService;
     private final UserService userService;
     private final JewelryService jewelryService;
-
     private final SizeRingService sizeRingService;
-
     private final ReportMapper reportMapper;
 
 
@@ -45,7 +43,6 @@ public class ReportService {
         return report;
     }
 
-
     public Report read(Long id) {
         return reportRepository.findById(id)
                 .orElseThrow(() -> new HttpException ("Report by id %d not found".formatted(id), HttpStatus.NOT_FOUND));
@@ -54,7 +51,6 @@ public class ReportService {
     public List<Report> readAll() {
         return reportRepository.findAll();
     }
-
 
     @Transactional
     public void update(ReportRequest reportRequest, Long id) {
@@ -73,7 +69,6 @@ public class ReportService {
         reportUpdate.setEdit(true);
         reportUpdate.setEditDate(LocalDateTime.now());
     }
-
 
     @Transactional
     public void delete(Long id) {
