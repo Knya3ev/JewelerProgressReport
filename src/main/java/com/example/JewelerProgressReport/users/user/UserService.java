@@ -25,7 +25,7 @@ public class UserService {
         return user;
     }
 
-    public User read(Long id) {
+    public User getUser(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new HttpException("User by id %d not found".formatted(id), HttpStatus.NOT_FOUND));
     }
@@ -40,8 +40,13 @@ public class UserService {
     }
 
     @Transactional
+    public void editCountShopDirector(Long userId, int count) {
+        userRepository.editCountShopDirector(userId,count);
+    }
+
+    @Transactional
     public User update(CreateUserRequest createUserRequest, Long id) {
-        User userUpdate = this.read(id);
+        User userUpdate = this.getUser(id);
         User request = userMapper.toUser(createUserRequest);
 
         userUpdate.setUsername(request.getUsername());
@@ -53,7 +58,7 @@ public class UserService {
 
     @Transactional
     public void delete(Long id) {
-        User user = this.read(id);
+        User user = this.getUser(id);
         userRepository.delete(user);
     }
 }

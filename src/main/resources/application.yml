@@ -2,11 +2,14 @@ spring:
   mvc:
     format:
       date: "yyyy-MM-dd"
+  config:
+    import:
+      optional:file:.env[.properties]
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/jeweler_db
-    username: postgres
-    password: 12345
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   liquibase:
     enabled: true
@@ -22,8 +25,14 @@ spring:
 
 client:
   epl:
-    host: https://epldiamond.ru/
+    host: ${EPL_LINK}
     search: /search
+
+settings:
+  time-zone: Europe/Moscow
+
+shop:
+  trial-subscription-days: ${TRIAL_SUBSCRIPTION_DAYS}
 
 parser:
   epl:

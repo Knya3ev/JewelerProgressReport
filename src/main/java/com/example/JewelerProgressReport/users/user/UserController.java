@@ -32,17 +32,18 @@ public class UserController {
     public ResponseEntity<User> create(@RequestBody @Validated CreateUserRequest createUserRequest){
         return ResponseEntity.ok().body(userService.create(createUserRequest));
     }
+
     @Operation(summary = "Get by User id ")
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getById(@PathVariable("id") Long id){
-        return ResponseEntity.ok().body(userMapper.toUserResponse(userService.read(id)));
+        return ResponseEntity.ok().body(userMapper.toUserResponse(userService.getUser(id)));
     }
+
     @Operation(summary = "Get all Users")
     @GetMapping("/all")
     public ResponseEntity<List<UserResponse>> getAll(){
         return ResponseEntity.ok().body(userMapper.toUserResponseList(userService.readAll()));
     }
-
 
     @Operation(summary = "Remove by User id")
     @DeleteMapping("/{id}")

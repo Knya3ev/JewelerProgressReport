@@ -13,7 +13,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -23,6 +26,9 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "shop", schema = "public")
 public class Shop {
     @Id
@@ -30,14 +36,21 @@ public class Shop {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shop_seq")
     @Column(name = "id")
     private Long id;
+
     @Column(name = "name")
     private String name;
+
     @Column(name = "number_of_administrators")
     private int numberOfAdministrators;
+
     @Column(name = "number_of_shop_assistant")
     private int numberOfShopAssistants;
+
+    @Builder.Default
     @Column(name = "number_of_jeweler_master")
-    private int numberOfJewelerMasters;
+    private int numberOfJewelerMasters = 0;
+
+    @Builder.Default
     @Column(name = "is_have_jeweler")
     private boolean isHaveJeweler = false;
 

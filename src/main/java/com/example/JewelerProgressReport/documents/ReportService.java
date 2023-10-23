@@ -32,7 +32,7 @@ public class ReportService {
 
     @Transactional
     public Report create(Long personId, ReportRequest reportRequest) {
-        User user = userService.read(personId);
+        User user = userService.getUser(personId);
         Report report = reportMapper.toReport(reportRequest);
         Client client = clientService.checkoutClientOrCreate(reportRequest.getPhoneNumber());
 
