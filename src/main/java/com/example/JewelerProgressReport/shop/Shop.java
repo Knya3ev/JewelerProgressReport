@@ -59,14 +59,18 @@ public class Shop {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id")
+    @Builder.Default
     private List<User> administrators = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id")
+    @Builder.Default
     private List<User> shopAssistants = new ArrayList<>();
+
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id")
+    @Builder.Default
     private List<User> jewelerMasters = new ArrayList<>();
 
     @Column(name = "paid_subscription_validity_period")

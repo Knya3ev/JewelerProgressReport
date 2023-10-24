@@ -4,7 +4,7 @@ databaseChangeLog:
       author: Mikhail Knyazev
       changes:
         - createSequence:
-            sequenceName: person_seq
+            sequenceName: shop_seq
             dataType: bigint
             startValue: 1
             incrementBy: 1

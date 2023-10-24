@@ -36,29 +36,29 @@ public class ShopController {
     }
 
     @Operation(summary = "Create shop")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ShopResponse> create(@PathVariable("userId") Long userId,
                                                @RequestBody @Valid ShopRequest shopRequest) {
         return ResponseEntity.ok(shopService.createShop(shopRequest, userId));
     }
 
     @Operation(summary = "Add admin for shop")
-    @PostMapping(value = "/add-admin", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ShopResponse> addAdmin(@RequestParam("shopId") Long shopId,
+    @PostMapping(value = "/{shopId}/add-admin", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ShopResponse> addAdmin(@PathVariable("shopId") Long shopId,
                                                  @RequestParam("userId") Long userId) {
         return ResponseEntity.ok(shopService.addAdmin(shopId, userId));
     }
 
     @Operation(summary = "Add shop assistants for shop")
-    @PostMapping(value = "/add-shop-assistants", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ShopResponse> addShopAssistants(@RequestParam("shopId") Long shopId,
+    @PostMapping(value = "/{shopId}/add-shop-assistants", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ShopResponse> addShopAssistants(@PathVariable("shopId") Long shopId,
                                                           @RequestParam("userId") Long userId) {
         return ResponseEntity.ok(shopService.addShopAssistants(shopId, userId));
     }
 
     @Operation(summary = "Add jeweler for shop")
-    @PostMapping(value = "/add-jeweler", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ShopResponse> addJeweler(@RequestParam("shopId") Long shopId,
+    @PostMapping(value = "/{shopId}/add-jeweler", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ShopResponse> addJeweler(@PathVariable("shopId") Long shopId,
                                                    @RequestParam("userId") Long userId) {
         return ResponseEntity.ok(shopService.addJeweler(shopId, userId));
     }

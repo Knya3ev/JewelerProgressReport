@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -146,9 +147,12 @@ public class ShopService {
     }
 
     private ShopResponse toResponse(Shop shop) {
-        LocalDate nowDate = shop.getPaidSubscriptionValidityPeriod().toLocalDate();
-        LocalDate targetLocalDate = LocalDate.from(LocalDateTime.now(ZoneId.of(settingProperties.getTimeZone())));
-        Period period = Period.between(nowDate, targetLocalDate);
+        LocalDateTime nowDate = shop.getPaidSubscriptionValidityPeriod();
+        LocalDateTime targetLocalDate = LocalDateTime.now(ZoneId.of(settingProperties.getTimeZone()));
+        LocalDateTime tempDateTime = LocalDateTime.from( nowDate );
+
+        Integer days = Math.toIntExact(tempDateTime.until(targetLocalDate, ChronoUnit.DAYS)) * -1;
+
         return ShopResponse.builder()
                 .name(shop.getName())
                 .director(userMapper.toUserResponse(shop.getDirector()))
@@ -156,7 +160,7 @@ public class ShopService {
                 .shopAssistants(shop.getShopAssistants().stream().map(userMapper::toUserResponse).toList())
                 .isHaveJeweler(shop.isHaveJeweler())
                 .jewelerMasters(shop.getJewelerMasters().stream().map(userMapper::toUserResponse).toList())
-                .subscriptionDays(period.getDays())
+                .subscriptionDays(days)
                 .build();
     }
 

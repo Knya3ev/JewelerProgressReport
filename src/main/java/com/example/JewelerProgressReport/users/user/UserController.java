@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @Operation(summary = "change the number of shops for the user")
-    @PostMapping(value = "/{userId}/edit/shops")
+    @PatchMapping(value = "/{userId}/edit/shops")
     public ResponseEntity<Void> editCountShopDirector(@PathVariable("userId") Long userId,
                                                       @RequestParam("count") int count) {
         userService.editCountShopDirector(userId, count);
