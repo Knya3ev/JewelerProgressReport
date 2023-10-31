@@ -1,6 +1,7 @@
 package com.example.JewelerProgressReport.users.user;
 
 import com.example.JewelerProgressReport.exception.HttpException;
+import com.example.JewelerProgressReport.users.user.response.UserResponse;
 import com.example.JewelerProgressReport.util.map.UserMapper;
 import com.example.JewelerProgressReport.users.user.request.CreateUserRequest;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,10 @@ public class UserService {
         User user = userMapper.toUser(request);
         userRepository.save(user);
         return user;
+    }
+
+    public UserResponse getUserResponse(Long id){
+        return userMapper.toUserResponse(getUser(id));
     }
 
     public User getUser(Long id) {

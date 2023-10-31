@@ -11,6 +11,8 @@ import java.util.List;
 @Setter
 @Builder
 public class ShopResponse {
+
+    private Long id;
     private String name;
 
     private UserResponse director;

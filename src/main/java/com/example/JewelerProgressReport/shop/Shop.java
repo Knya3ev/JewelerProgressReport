@@ -21,7 +21,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -60,19 +62,45 @@ public class Shop {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id")
     @Builder.Default
-    private List<User> administrators = new ArrayList<>();
+    private List<User> staff = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shop_id")
-    @Builder.Default
-    private List<User> shopAssistants = new ArrayList<>();
+    @Column(name = "administrators")
+    private String administrators;
 
+    @Column(name = "shop_assistants")
+    private String shopAssistants;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shop_id")
-    @Builder.Default
-    private List<User> jewelerMasters = new ArrayList<>();
+    @Column(name = "jeweler_masters")
+    private String jewelerMasters;
+
 
     @Column(name = "paid_subscription_validity_period")
     private LocalDateTime paidSubscriptionValidityPeriod;
+
+    public List<Long> getAdministrators() {
+        if(administrators == null) return new ArrayList<>();
+        return Arrays.stream(administrators.split(";")).map(Long::parseLong).toList();
+    }
+
+    public void setAdministrators(List<Long> administrators) {
+        this.administrators = administrators.stream().map(String::valueOf).collect(Collectors.joining(";"));
+    }
+
+    public List<Long> getShopAssistants() {
+        if(shopAssistants == null) return new ArrayList<>();
+        return Arrays.stream(shopAssistants.split(";")).map(Long::parseLong).toList();
+    }
+
+    public void setShopAssistants(List<Long> shopAssistants) {
+        this.shopAssistants = shopAssistants.stream().map(String::valueOf).collect(Collectors.joining(";"));;
+    }
+
+    public List<Long> getJewelerMasters() {
+        if(jewelerMasters == null) return new ArrayList<>();
+        return Arrays.stream(jewelerMasters.split(";")).map(Long::parseLong).toList();
+    }
+
+    public void setJewelerMasters(List<Long> jewelerMasters) {
+        this.jewelerMasters = jewelerMasters.stream().map(String::valueOf).collect(Collectors.joining(";"));;
+    }
 }

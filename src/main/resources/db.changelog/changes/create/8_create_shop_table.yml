@@ -54,6 +54,16 @@ databaseChangeLog:
               - column:
                   name: paid_subscription_validity_period
                   type: TIMESTAMP
+              - column:
+                  name: administrators
+                  type: VARCHAR(255)
+              - column:
+                  name: shop_assistants
+                  type: VARCHAR(255)
+              - column:
+                  name: jeweler_masters
+                  type: VARCHAR(255)
+
 
         - addForeignKeyConstraint:
             baseTableName: shop

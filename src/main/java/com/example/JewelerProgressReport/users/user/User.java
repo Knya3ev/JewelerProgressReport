@@ -9,6 +9,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -33,16 +35,22 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
     @Column(name = "id")
     private Long id;
+
     @Column(name = "username")
     private String username;
+
     @Column(name = "firstname")
     private String firstname;
+
     @Column(name = "telegram_id")
     private String telegramId;
+
     @Column(name = "phone_number")
     private String phoneNumber;
+
     @Column(name = "is_verification")
     private boolean isVerification = false; // возможно убрать, реализация будет через role
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Report> reports = new ArrayList<>();
 

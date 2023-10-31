@@ -1,6 +1,8 @@
 package com.example.JewelerProgressReport;
 
 import com.example.JewelerProgressReport.config.SettingProperties;
+import com.example.JewelerProgressReport.jewelry.goldPrice.GoldPriceClient;
+import com.example.JewelerProgressReport.parser.EplClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,7 +12,7 @@ import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 
 
 @SpringBootApplication
-@EnableFeignClients
+@EnableFeignClients(clients = {GoldPriceClient.class, EplClient.class})
 @ImportAutoConfiguration({FeignAutoConfiguration.class})
 @EnableConfigurationProperties({SettingProperties.class})
 public class JewelerProgressReportApplication {

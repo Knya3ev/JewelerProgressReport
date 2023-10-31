@@ -22,6 +22,20 @@ spring:
       hibernate:
         ddl-auto: validate
 
+gold:
+
+  price:
+    rub: 3600
+
+  api:
+    url: https://www.goldapi.io/api
+    key: goldapi-123zu6ujrloa4qma4-io
+    time-out: 12
+
+  percentage:
+      up: 880
+      medium: 780
+      low: 680
 
 client:
   epl:

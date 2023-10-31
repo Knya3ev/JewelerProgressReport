@@ -6,6 +6,7 @@ import com.example.JewelerProgressReport.shop.request.ShopRequest;
 import com.example.JewelerProgressReport.shop.response.ShopResponse;
 import com.example.JewelerProgressReport.users.user.User;
 import com.example.JewelerProgressReport.users.user.UserService;
+import com.example.JewelerProgressReport.users.user.response.UserResponse;
 import com.example.JewelerProgressReport.util.map.UserMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,9 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +51,11 @@ public class ShopService {
     public ShopResponse createShop(ShopRequest shopRequest, Long userId) {
         User director = userService.getUser(userId);
 
+        if (director.getCountShops() == 0) {
+            throw new HttpException("You can't create a shop, your limit for creating shops: %d"
+                    .formatted(director.getCountShops()), HttpStatus.BAD_REQUEST);
+        }
+
         if (director.getCountShops() > director.getShopOwnership().size()) {
 
             if (shopRepository.findByName(shopRequest.getName().toLowerCase()).isPresent()) {
@@ -71,7 +79,8 @@ public class ShopService {
         Shop shop = getShop(shopId);
 
         if (shop.getNumberOfAdministrators() > shop.getAdministrators().size()) {
-            shop.getAdministrators().add(admin);
+            shop.setAdministrators(addForList(shop.getAdministrators(), admin.getId()));
+            shop.getStaff().add(admin);
             return toResponse(shop);
         }
         throw new HttpException("You've got a limit on the number of administrators, no more: %d"
@@ -84,7 +93,8 @@ public class ShopService {
         Shop shop = getShop(shopId);
 
         if (shop.getNumberOfShopAssistants() > shop.getShopAssistants().size()) {
-            shop.getShopAssistants().add(shopAssistants);
+            shop.setShopAssistants(addForList(shop.getShopAssistants(), shopAssistants.getId()));
+            shop.getStaff().add(shopAssistants);
             return toResponse(shop);
         }
         throw new HttpException("You've got a limit on the number of shop assistants, no more: %d"
@@ -99,7 +109,8 @@ public class ShopService {
             User jeweler = userService.getUser(userId);
 
             if (shop.getNumberOfJewelerMasters() > shop.getJewelerMasters().size()) {
-                shop.getJewelerMasters().add(jeweler);
+                shop.setJewelerMasters(addForList(shop.getJewelerMasters(), jeweler.getId()));
+                shop.getStaff().add(jeweler);
                 return toResponse(shop);
             }
 
@@ -149,19 +160,26 @@ public class ShopService {
     private ShopResponse toResponse(Shop shop) {
         LocalDateTime nowDate = shop.getPaidSubscriptionValidityPeriod();
         LocalDateTime targetLocalDate = LocalDateTime.now(ZoneId.of(settingProperties.getTimeZone()));
-        LocalDateTime tempDateTime = LocalDateTime.from( nowDate );
+        LocalDateTime tempDateTime = LocalDateTime.from(nowDate);
 
         Integer days = Math.toIntExact(tempDateTime.until(targetLocalDate, ChronoUnit.DAYS)) * -1;
 
         return ShopResponse.builder()
+                .id(shop.getId())
                 .name(shop.getName())
                 .director(userMapper.toUserResponse(shop.getDirector()))
-                .administrators(shop.getAdministrators().stream().map(userMapper::toUserResponse).toList())
-                .shopAssistants(shop.getShopAssistants().stream().map(userMapper::toUserResponse).toList())
+                .administrators(shop.getAdministrators().stream().map(userService::getUserResponse).toList())
+                .shopAssistants(shop.getShopAssistants().stream().map(userService::getUserResponse).toList())
                 .isHaveJeweler(shop.isHaveJeweler())
-                .jewelerMasters(shop.getJewelerMasters().stream().map(userMapper::toUserResponse).toList())
+                .jewelerMasters(shop.getJewelerMasters().stream().map(userService::getUserResponse).toList())
                 .subscriptionDays(days)
                 .build();
+    }
+
+    private List<Long> addForList(List<Long> list, Long element) {
+        List<Long> mutableList = new ArrayList<>(list);
+        mutableList.add(element);
+        return mutableList;
     }
 
 
