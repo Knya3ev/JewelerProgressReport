@@ -1,4 +1,4 @@
-package com.example.JewelerProgressReport.jewelry.goldPrice;
+package com.example.JewelerProgressReport.jewelry.gold_price;
 
 import lombok.Getter;
 import lombok.Setter;

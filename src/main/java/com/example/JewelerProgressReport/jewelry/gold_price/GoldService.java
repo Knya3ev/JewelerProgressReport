@@ -1,4 +1,4 @@
-package com.example.JewelerProgressReport.jewelry.goldPrice;
+package com.example.JewelerProgressReport.jewelry.gold_price;
 
 import com.example.JewelerProgressReport.config.SettingProperties;
 import com.example.JewelerProgressReport.jewelry.enums.Metal;

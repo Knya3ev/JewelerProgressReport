@@ -1,7 +1,7 @@
 package com.example.JewelerProgressReport.jewelry;
 
 import com.example.JewelerProgressReport.jewelry.enums.Metal;
-import com.example.JewelerProgressReport.jewelry.goldPrice.GoldService;
+import com.example.JewelerProgressReport.jewelry.gold_price.GoldService;
 import com.example.JewelerProgressReport.jewelry.response.JewelryResponse;
 import com.example.JewelerProgressReport.util.map.JewelryMapper;
 import io.swagger.v3.oas.annotations.Operation;
