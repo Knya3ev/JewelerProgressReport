@@ -1,7 +1,8 @@
-package com.example.JewelerProgressReport.util.map;
+package com.example.JewelerProgressReport.documents;
 
 import com.example.JewelerProgressReport.documents.Report;
 import com.example.JewelerProgressReport.documents.request.ReportRequest;
+import com.example.JewelerProgressReport.documents.response.ReportModeration;
 import com.example.JewelerProgressReport.documents.response.ReportResponse;
 import com.example.JewelerProgressReport.jewelry.enums.JewelleryProduct;
 import com.example.JewelerProgressReport.jewelry.enums.Metal;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,9 +44,12 @@ public class ReportMapper {
                         sizeRingService.checkoutSizeRingOrCreate(reportRequest.getSizeBefore(), reportRequest.getSizeAfter())
                         : null)
 
+                .sizeBefore(reportRequest.getSizeBefore())
+                .sizeAfter(reportRequest.getSizeAfter())
                 .unionCodeJewelry(reportRequest.getUnionCodeJewelry())
                 .count(reportRequest.getCount())
                 .article(reportRequest.getArticle())
+                .status(null)
                 .createdDate(LocalDateTime.now())
                 .build();
     }
@@ -79,7 +84,7 @@ public class ReportMapper {
     }
 
 
-    public List<ReportResponse> toReportResponseList(List<Report> reportList) {
+    public List<ReportResponse> toReportResponse(List<Report> reportList) {
         if (reportList == null) {
             return null;
         }
@@ -87,6 +92,39 @@ public class ReportMapper {
         List<ReportResponse> list = new ArrayList<ReportResponse>(reportList.size());
         for (Report report : reportList) {
             list.add(toReportResponse(report));
+        }
+
+        return list;
+    }
+
+    public ReportModeration toReportModeration(Report report){
+        if (report == null) {
+            return null;
+        }
+        return ReportModeration.builder()
+                .id(report.getId())
+                .article(report.getArticle())
+                .metal(report.getMetal())
+                .jewelleryProduct(report.getJewelleryProduct())
+                .createdDate(report.getCreatedDate())
+                .detailsOfOperation(report.getDetailsOfOperation())
+                .jewelleryOperations(report.getJewelleryOperations())
+                .sizeAfter(report.getSizeAfter())
+                .sizeBefore(report.getSizeBefore())
+                .status(report.getStatus())
+                .isEdit(report.isEdit())
+                .unionCodeJewelry(report.getUnionCodeJewelry())
+                .build();
+    }
+
+    public List<ReportModeration> toReportModeration(List<Report> reportList){
+        if (reportList == null) {
+            return null;
+        }
+
+        List<ReportModeration> list = new ArrayList<ReportModeration>(reportList.size());
+        for (Report report : reportList) {
+            list.add(toReportModeration(report));
         }
 
         return list;

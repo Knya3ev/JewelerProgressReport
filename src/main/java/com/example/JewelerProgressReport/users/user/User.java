@@ -60,6 +60,10 @@ public class User {
     @Column(name = "count_shops")
     private int countShops;
 
+    @ManyToOne
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
+
     public void addReport(Report report) {
         reports.add(report);
         report.setUser(this);

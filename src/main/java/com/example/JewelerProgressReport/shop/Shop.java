@@ -1,6 +1,7 @@
 package com.example.JewelerProgressReport.shop;
 
 
+import com.example.JewelerProgressReport.documents.Report;
 import com.example.JewelerProgressReport.users.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -63,6 +64,11 @@ public class Shop {
     @JoinColumn(name = "shop_id")
     @Builder.Default
     private List<User> staff = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shop_id")
+    @Builder.Default
+    private List<Report> reports = new ArrayList<>();
 
     @Column(name = "administrators")
     private String administrators;

@@ -24,7 +24,9 @@ public class SizeRingService {
         String size = getSizeAdjustmentStringFormatted(before,after);
         Optional<Resize> sizeRing1 = sizeRingRepository.findByRingResizing(size);
 
-        if (sizeRing1.isPresent()) return sizeRing1.get();
+        if (sizeRing1.isPresent()) {
+            return sizeRing1.get();
+        }
 
         Resize resize =
                 Resize.builder()

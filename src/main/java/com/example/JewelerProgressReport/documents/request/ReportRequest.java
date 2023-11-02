@@ -32,6 +32,5 @@ public class ReportRequest {
     private Double sizeBefore;
     private Double sizeAfter;
     private String unionCodeJewelry;
-    @NotBlank(message = "article cannot be empty")
     private String article;
 }

@@ -1,7 +1,7 @@
 package com.example.JewelerProgressReport.documents;
 
 
-import com.example.JewelerProgressReport.documents.Report;
+import com.example.JewelerProgressReport.documents.enums.StatusReport;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -35,4 +35,12 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate,
             @Param("personId") Long personId);
+
+    @Query(value = """
+            SELECT *
+            FROM report
+            WHERE status = :status
+            """,
+            nativeQuery = true)
+    List<Report> findAllModeration(@Param("status") String status);
 }

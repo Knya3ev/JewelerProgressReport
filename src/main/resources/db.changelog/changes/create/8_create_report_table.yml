@@ -40,10 +40,19 @@ databaseChangeLog:
                   name: details_of_operation
                   type: VARCHAR(150)
               - column:
+                  name: size_before
+                  type: double precision
+              - column:
+                  name: size_after
+                  type: double precision
+              - column:
                   name: union_code_jewelry
                   type: VARCHAR(50)
               - column:
                   name: article
+                  type: VARCHAR(50)
+              - column:
+                  name: status
                   type: VARCHAR(50)
               - column:
                   name: created_date
@@ -78,6 +87,13 @@ databaseChangeLog:
                     nullable: true
                     foreignKeyName: report_resize_fk
 
+              - column:
+                  name: shop_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: report_shop_fk
+
 
         - addForeignKeyConstraint:
             baseTableName: report
@@ -100,6 +116,14 @@ databaseChangeLog:
             baseColumnNames: resize_id
             constraintName: report_resize_fk
             referencedTableName: resize
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: report
+            baseColumnNames: shop_id
+            constraintName: report_shop_fk
+            referencedTableName: shop
             referencedColumnNames: id
             onDelete: CASCADE
 

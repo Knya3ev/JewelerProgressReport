@@ -1,9 +1,11 @@
 package com.example.JewelerProgressReport.documents;
 
 
+import com.example.JewelerProgressReport.documents.enums.StatusReport;
 import com.example.JewelerProgressReport.jewelry.enums.JewelleryProduct;
 import com.example.JewelerProgressReport.jewelry.enums.JewelleryOperation;
 import com.example.JewelerProgressReport.jewelry.enums.Metal;
+import com.example.JewelerProgressReport.shop.Shop;
 import com.example.JewelerProgressReport.users.client.Client;
 import com.example.JewelerProgressReport.users.user.User;
 import com.example.JewelerProgressReport.jewelry.resize.Resize;
@@ -29,6 +31,7 @@ public class Report {
     @Column(name = "id")
     private Long id;
 
+
     @Column(name = "count")
     private int count; //  количество изделий
 
@@ -44,11 +47,20 @@ public class Report {
     @Column(name = "details_of_operation")
     private String detailsOfOperation; // подробности операции
 
+    @Column(name = "size_before")
+    private Double sizeBefore;
+
+    @Column(name = "size_after")
+    private Double sizeAfter;
+
     @Column(name = "union_code_jewelry")
     private String unionCodeJewelry; // уникальный код изделия
 
     @Column(name = "article")
     private String article; //  артикул изделия
+
+    @Column(name = "status")
+    private StatusReport status;
 
     @Column(name = "created_date")
     private LocalDateTime createdDate; // дата оказания услуги
@@ -67,6 +79,9 @@ public class Report {
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
     private Client client;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Shop shop;
 
 
     public void removePersonAndClientAndResizes() {
