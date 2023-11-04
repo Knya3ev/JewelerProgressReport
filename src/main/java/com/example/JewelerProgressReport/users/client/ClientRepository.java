@@ -1,6 +1,5 @@
 package com.example.JewelerProgressReport.users.client;
 
-import com.example.JewelerProgressReport.users.client.Client;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

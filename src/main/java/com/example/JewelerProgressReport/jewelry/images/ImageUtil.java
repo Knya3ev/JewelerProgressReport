@@ -1,9 +1,7 @@
 package com.example.JewelerProgressReport.jewelry.images;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;

@@ -1,6 +1,5 @@
 package com.example.JewelerProgressReport.jewelry.response;
 
-import com.example.JewelerProgressReport.jewelry.enums.JewelleryProduct;
 import lombok.Getter;
 import lombok.Setter;
 

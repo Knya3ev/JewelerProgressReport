@@ -4,8 +4,6 @@ package com.example.JewelerProgressReport.jewelry.jewelry_resize;
 import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.jewelry.Jewelry;
 import com.example.JewelerProgressReport.jewelry.JewelryRepository;
-import com.example.JewelerProgressReport.jewelry.JewelryService;
-import com.example.JewelerProgressReport.jewelry.resize.SizeRingRepository;
 import com.example.JewelerProgressReport.jewelry.resize.SizeRingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

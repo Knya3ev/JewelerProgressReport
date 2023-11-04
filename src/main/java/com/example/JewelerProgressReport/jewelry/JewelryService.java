@@ -2,7 +2,6 @@ package com.example.JewelerProgressReport.jewelry;
 
 
 import com.example.JewelerProgressReport.documents.Report;
-import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.exception.HttpException;
 import com.example.JewelerProgressReport.jewelry.jewelry_resize.JewelryResize;
 import com.example.JewelerProgressReport.jewelry.jewelry_resize.JewelryResizeRepository;
@@ -13,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

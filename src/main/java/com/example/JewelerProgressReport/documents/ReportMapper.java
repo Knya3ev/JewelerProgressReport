@@ -1,15 +1,13 @@
 package com.example.JewelerProgressReport.documents;
 
-import com.example.JewelerProgressReport.documents.Report;
 import com.example.JewelerProgressReport.documents.enums.StatusReport;
 import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.documents.response.ReportModeration;
 import com.example.JewelerProgressReport.documents.response.ReportResponse;
+import com.example.JewelerProgressReport.jewelry.enums.JewelleryOperation;
 import com.example.JewelerProgressReport.jewelry.enums.JewelleryProduct;
 import com.example.JewelerProgressReport.jewelry.enums.Metal;
-import com.example.JewelerProgressReport.jewelry.enums.JewelleryOperation;
 import com.example.JewelerProgressReport.jewelry.resize.SizeRingService;
-import com.example.JewelerProgressReport.users.client.Client;
 import com.example.JewelerProgressReport.users.client.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;

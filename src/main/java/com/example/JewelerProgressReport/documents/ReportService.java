@@ -1,19 +1,15 @@
 package com.example.JewelerProgressReport.documents;
 
 import com.example.JewelerProgressReport.documents.enums.StatusReport;
+import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.documents.response.ReportModeration;
 import com.example.JewelerProgressReport.exception.HttpException;
-import com.example.JewelerProgressReport.jewelry.jewelry_resize.JewelryResizeService;
-import com.example.JewelerProgressReport.shop.response.ShopResponse;
-import com.example.JewelerProgressReport.shop.response.ShopResponseFullCountStatus;
-import com.example.JewelerProgressReport.users.client.Client;
-import com.example.JewelerProgressReport.users.user.User;
-import com.example.JewelerProgressReport.documents.request.ReportRequest;
-import com.example.JewelerProgressReport.users.client.ClientService;
 import com.example.JewelerProgressReport.jewelry.JewelryService;
-import com.example.JewelerProgressReport.users.user.UserService;
+import com.example.JewelerProgressReport.jewelry.jewelry_resize.JewelryResizeService;
 import com.example.JewelerProgressReport.jewelry.resize.SizeRingService;
-import jakarta.el.ELClass;
+import com.example.JewelerProgressReport.users.client.ClientService;
+import com.example.JewelerProgressReport.users.user.User;
+import com.example.JewelerProgressReport.users.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
