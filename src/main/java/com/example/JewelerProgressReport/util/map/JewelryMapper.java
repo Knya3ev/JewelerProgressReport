@@ -9,7 +9,7 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface JewelryMapper {
 
-    @Mapping(target = "resizes", expression = "java(jewelry.getResizes().stream().map(i -> i.getRingResizing()).toList())")
+    @Mapping(target = "resizes", expression = "java(jewelry.getJewelryResizes().stream().map(i -> i.getResize().getRingResizing()).toList())")
     @Mapping(target = "jewelleryProduct", expression = "java(jewelry.getJewelleryProduct().getRu())")
     JewelryResponse toJewelryResponse(Jewelry jewelry);
 

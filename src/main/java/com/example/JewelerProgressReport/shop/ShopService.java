@@ -1,12 +1,14 @@
 package com.example.JewelerProgressReport.shop;
 
 import com.example.JewelerProgressReport.config.SettingProperties;
+import com.example.JewelerProgressReport.documents.ReportService;
 import com.example.JewelerProgressReport.exception.HttpException;
 import com.example.JewelerProgressReport.shop.request.ShopRequest;
 import com.example.JewelerProgressReport.shop.response.ShopResponse;
+import com.example.JewelerProgressReport.shop.response.ShopResponseCountModerationReports;
+import com.example.JewelerProgressReport.shop.response.ShopResponseFullCountStatus;
 import com.example.JewelerProgressReport.users.user.User;
 import com.example.JewelerProgressReport.users.user.UserService;
-import com.example.JewelerProgressReport.users.user.response.UserResponse;
 import com.example.JewelerProgressReport.util.map.UserMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -14,20 +16,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ShopService {
     private final ShopRepository shopRepository;
     private final UserService userService;
+    private final ReportService reportService;
     private final SettingProperties settingProperties;
     private final UserMapper userMapper;
 
@@ -145,6 +145,25 @@ public class ShopService {
         return toResponse(getShop(shopId));
     }
 
+    public ShopResponseFullCountStatus getNumbersAllStatusesStore(Long shopId){
+
+        return ShopResponseFullCountStatus.builder()
+                .id(shopId)
+                .name(getShop(shopId).getName())
+                .all(reportService.getAllCount(shopId))
+                .moderation(reportService.getCountReportModeration(shopId))
+                .uniqueness(reportService.getCountReportUniqueness(shopId))
+                .ordinary(reportService.getCountReportOrdinary(shopId))
+                .rejection(reportService.getCountReportRejection(shopId))
+                .build();
+
+    }
+
+    public List<ShopResponseCountModerationReports> getCountModerationForShop(){
+        return shopRepository.findAll()
+                .stream().map(this::toShopResponseCountModerationReports).toList();
+    }
+
     private Shop toShop(ShopRequest request, Long userId) {
 
         return Shop.builder()
@@ -173,6 +192,14 @@ public class ShopService {
                 .isHaveJeweler(shop.isHaveJeweler())
                 .jewelerMasters(shop.getJewelerMasters().stream().map(userService::getUserResponse).toList())
                 .subscriptionDays(days)
+                .build();
+    }
+
+    private ShopResponseCountModerationReports toShopResponseCountModerationReports(Shop shop){
+        return ShopResponseCountModerationReports.builder()
+                .id(shop.getId())
+                .name(shop.getName())
+                .moderation(reportService.getCountReportModeration(shop.getId()))
                 .build();
     }
 

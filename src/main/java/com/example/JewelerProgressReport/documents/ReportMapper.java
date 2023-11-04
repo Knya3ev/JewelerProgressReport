@@ -1,6 +1,7 @@
 package com.example.JewelerProgressReport.documents;
 
 import com.example.JewelerProgressReport.documents.Report;
+import com.example.JewelerProgressReport.documents.enums.StatusReport;
 import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.documents.response.ReportModeration;
 import com.example.JewelerProgressReport.documents.response.ReportResponse;
@@ -8,6 +9,8 @@ import com.example.JewelerProgressReport.jewelry.enums.JewelleryProduct;
 import com.example.JewelerProgressReport.jewelry.enums.Metal;
 import com.example.JewelerProgressReport.jewelry.enums.JewelleryOperation;
 import com.example.JewelerProgressReport.jewelry.resize.SizeRingService;
+import com.example.JewelerProgressReport.users.client.Client;
+import com.example.JewelerProgressReport.users.client.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 public class ReportMapper {
 
     private final SizeRingService sizeRingService;
+    private final ClientService clientService;
 
     public Report toReport(ReportRequest reportRequest) {
 
@@ -49,7 +53,8 @@ public class ReportMapper {
                 .unionCodeJewelry(reportRequest.getUnionCodeJewelry())
                 .count(reportRequest.getCount())
                 .article(reportRequest.getArticle())
-                .status(null)
+                .status(StatusReport.SERVICE)
+                .client(clientService.checkoutClientOrCreate(reportRequest.getPhoneNumber()))
                 .createdDate(LocalDateTime.now())
                 .build();
     }

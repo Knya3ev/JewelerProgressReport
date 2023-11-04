@@ -1,7 +1,6 @@
 package com.example.JewelerProgressReport.documents;
 
 
-import com.example.JewelerProgressReport.documents.enums.StatusReport;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -42,5 +41,19 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
             WHERE status = :status
             """,
             nativeQuery = true)
-    List<Report> findAllModeration(@Param("status") String status);
+    List<Report> findAllByStatus(@Param("status") String status);
+
+
+    @Query(value = """
+            SELECT count(r)
+            FROM Report r
+            WHERE r.shop_id = :shop AND r.status = :status
+            """, nativeQuery = true)
+    int countReportByStatus(@Param("shop") Long shopId, @Param("status") String status);
+
+    @Query("""
+            SELECT count(r)
+            FROM Report r
+            """)
+    int countAllResizes(@Param("shop") Long shopId);
 }

@@ -1,7 +1,10 @@
 package com.example.JewelerProgressReport.shop;
 
+import com.example.JewelerProgressReport.documents.ReportService;
 import com.example.JewelerProgressReport.shop.request.ShopRequest;
 import com.example.JewelerProgressReport.shop.response.ShopResponse;
+import com.example.JewelerProgressReport.shop.response.ShopResponseCountModerationReports;
+import com.example.JewelerProgressReport.shop.response.ShopResponseFullCountStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ShopController {
     private final ShopService shopService;
+    private final ReportService reportService;
 
     @Operation(summary = "Get shop by id")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -71,23 +75,36 @@ public class ShopController {
     }
 
     @Operation(summary = "change the number of administrators for the shop")
-    @PostMapping(value = "/{shopId}/edit/admin")
+    @PostMapping(value = "/{shopId}/edit/admin", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ShopResponse> editCountAdmin(@PathVariable("shopId") Long shopId,
                                                        @RequestParam("count") int count) {
         return ResponseEntity.ok(shopService.editCountAdmin(shopId, count));
     }
 
     @Operation(summary = "change the number of shop assistants for the shop")
-    @PostMapping(value = "/{shopId}/edit/shop-assistants")
+    @PostMapping(value = "/{shopId}/edit/shop-assistants", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ShopResponse> editCountShopAssistants(@PathVariable("shopId") Long shopId,
                                                                 @RequestParam("count") int count) {
         return ResponseEntity.ok(shopService.editCountShopAssistants(shopId, count));
     }
 
     @Operation(summary = "change the number of jeweler for the shop")
-    @PostMapping(value = "/{shopId}/edit/jeweler")
+    @PostMapping(value = "/{shopId}/edit/jeweler", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ShopResponse> editCountJeweler(@PathVariable("shopId") Long shopId,
                                                          @RequestParam("count") int count) {
         return ResponseEntity.ok(shopService.editCountJeweler(shopId, count));
     }
+
+    @Operation(summary = "Get numbers all statuses store")
+    @GetMapping(value = "/{shopId}/full-counts", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ShopResponseFullCountStatus> getFullCountForShop(@PathVariable("shopId") Long shopId) {
+        return ResponseEntity.ok(shopService.getNumbersAllStatusesStore(shopId));
+    }
+
+    @Operation(summary = "Get count reports moderation for shops")
+    @GetMapping(value = "/all/moderation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ShopResponseCountModerationReports>> getCountModerationForShops() {
+        return ResponseEntity.ok(shopService.getCountModerationForShop());
+    }
+
 }

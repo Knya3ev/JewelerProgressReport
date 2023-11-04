@@ -37,6 +37,14 @@ public class ReportController {
         return ResponseEntity.ok().body(reportMapper.toReportResponse(reportService.create(personId, reportRequest)));
     }
 
+    @Operation(summary = "Update report ")
+    @PatchMapping(value = "/{id}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> update(@PathVariable("id") Long id,
+                                       @RequestBody @Valid ReportRequest reportRequest) {
+        reportService.update(reportRequest, id);
+        return ResponseEntity.ok().build();
+    }
+
     @Operation(summary = "Get report by id")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReportResponse> get(@PathVariable("id") Long id) {
@@ -47,6 +55,12 @@ public class ReportController {
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ReportResponse>> getAll() {
         return ResponseEntity.ok().body(reportMapper.toReportResponse(reportService.readAll()));
+    }
+    @Operation(summary = "Delete report")
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        reportService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "Get all reports that are being moderated")
@@ -86,18 +100,4 @@ public class ReportController {
         return ResponseEntity.ok(reportService.cancelReportResize(reportId));
     }
 
-    @Operation(summary = "Update report ")
-    @PatchMapping(value = "/{id}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> update(@PathVariable("id") Long id,
-                                       @RequestBody @Valid ReportRequest reportRequest) {
-        reportService.update(reportRequest, id);
-        return ResponseEntity.ok().build();
-    }
-
-    @Operation(summary = "Delete report")
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        reportService.delete(id);
-        return ResponseEntity.ok().build();
-    }
 }

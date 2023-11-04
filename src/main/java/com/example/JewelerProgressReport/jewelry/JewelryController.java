@@ -6,6 +6,7 @@ import com.example.JewelerProgressReport.jewelry.response.JewelryResponse;
 import com.example.JewelerProgressReport.util.map.JewelryMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,12 +32,10 @@ public class JewelryController {
 
     @GetMapping("/gold/price")
     public ResponseEntity<BigDecimal> getPriceGold(@RequestParam double length,
-                                               @RequestParam double width,
-                                               @RequestParam double height,
-                                               @RequestParam String metal){
+                                                   @RequestParam double width,
+                                                   @RequestParam double height,
+                                                   @RequestParam String metal){
 
         return ResponseEntity.ok(goldService.getPriceForAddingGold(length,width,height,Metal.fromCode(metal)));
     }
-
-
 }
