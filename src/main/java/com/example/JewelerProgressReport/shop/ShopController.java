@@ -8,6 +8,7 @@ import com.example.JewelerProgressReport.shop.response.ShopResponseFullCountStat
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/shop")
 @RequiredArgsConstructor
+@Slf4j
 public class ShopController {
     private final ShopService shopService;
     private final ReportService reportService;
@@ -96,9 +98,11 @@ public class ShopController {
     }
 
     @Operation(summary = "Get numbers all statuses store")
-    @GetMapping(value = "/{shopId}/full-counts", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{shopId}/full-counts")
     public ResponseEntity<ShopResponseFullCountStatus> getFullCountForShop(@PathVariable("shopId") Long shopId) {
-        return ResponseEntity.ok(shopService.getNumbersAllStatusesStore(shopId));
+        ShopResponseFullCountStatus shopResponseFullCountStatus = shopService.getNumbersAllStatusesStore(shopId);
+        log.info(shopResponseFullCountStatus.toString());
+        return ResponseEntity.ok(shopResponseFullCountStatus);
     }
 
     @Operation(summary = "Get count reports moderation for shops")

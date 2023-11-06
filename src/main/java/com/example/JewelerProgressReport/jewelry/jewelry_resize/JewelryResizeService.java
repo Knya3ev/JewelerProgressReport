@@ -1,6 +1,7 @@
 package com.example.JewelerProgressReport.jewelry.jewelry_resize;
 
 
+import com.example.JewelerProgressReport.documents.request.ReportCounselingRequest;
 import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.jewelry.Jewelry;
 import com.example.JewelerProgressReport.jewelry.JewelryRepository;
@@ -19,21 +20,26 @@ public class JewelryResizeService {
     private final SizeRingService sizeRingService;
 
 
+    public boolean CheckoutUniqueJewelry(ReportRequest report) {
+        return CheckoutUniqueJewelry(report.getArticle(), report.getSizeBefore(), report.getSizeAfter());
+    }
 
-    public boolean CheckoutUniqueJewelry(ReportRequest report){
-        Optional<Jewelry> jewelry = jewelryRepository.findByArticle(report.getArticle());
+    public boolean CheckoutUniqueJewelry(ReportCounselingRequest report) {
+        return CheckoutUniqueJewelry(report.getArticle(), report.getSizeBefore(), report.getSizeAfter());
+    }
 
-        if(jewelry.isEmpty()) {
+    private boolean CheckoutUniqueJewelry(String article, Double before, Double after) {
+        Optional<Jewelry> jewelry = jewelryRepository.findByArticle(article);
+
+        if (jewelry.isEmpty()) {
             return false;
         }
 
-        sizeRingService.checkoutSizeRingOrCreate(report.getSizeBefore(),report.getSizeAfter());
+        sizeRingService.checkoutSizeRingOrCreate(before, after);
 
         Optional<JewelryResize> jewelryResize = jewelryResizeRepository.getJewelryArticleAndResizes(
-                report.getArticle(),
-                sizeRingService.getSizeAdjustmentStringFormatted(
-                        report.getSizeBefore(),
-                        report.getSizeAfter()));
+                article,
+                sizeRingService.getSizeAdjustmentStringFormatted(before, after));
 
         return jewelryResize.isPresent();
     }

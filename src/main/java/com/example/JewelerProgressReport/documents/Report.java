@@ -45,7 +45,8 @@ public class Report {
 
 
     @Column(name = "count")
-    private int count; //  количество изделий
+    @Builder.Default
+    private int count = 1; //  количество изделий
 
     @Column(name = "jewellery_product")
     private JewelleryProduct jewelleryProduct; // тип изделия

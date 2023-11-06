@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long> {
@@ -43,6 +44,14 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
             nativeQuery = true)
     List<Report> findAllByStatus(@Param("status") String status);
 
+    @Query(value = """
+            SELECT *
+            FROM report
+            WHERE status = :status AND article = :article
+            """,
+            nativeQuery = true)
+    List<Report> findAllByStatusAndArticle(@Param("article") String article,
+                                           @Param("status") String status);
 
     @Query(value = """
             SELECT count(r)
@@ -51,9 +60,21 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
             """, nativeQuery = true)
     int countReportByStatus(@Param("shop") Long shopId, @Param("status") String status);
 
-    @Query("""
+    @Query(value = """
             SELECT count(r)
             FROM Report r
-            """)
+            WHERE r.shop_id = :shop
+            """, nativeQuery = true)
     int countAllResizes(@Param("shop") Long shopId);
+
+    @Query(value = """
+            SELECT *
+            FROM report
+            WHERE article = :article AND status = :status AND size_before = :before AND size_after = :after
+            """, nativeQuery = true)
+    Optional<Report> checkConsultation(@Param("article") String article,
+                                       @Param("before") Double before,
+                                       @Param("after") Double after,
+                                       @Param("status") String status);
+
 }

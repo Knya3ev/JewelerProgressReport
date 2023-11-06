@@ -21,23 +21,20 @@ databaseChangeLog:
                   type: BIGINT
                   constraints:
                     nullable: false
-                    primaryKey: true
-                    primaryKeyName: jewelry_resize_pk
 
               - column:
                   name: jewelry_id
                   type: BIGINT
                   constraints:
                     nullable: false
-                    primaryKey: true
-                    primaryKeyName: jewelry_id
+
               - column:
                   name: resize_id
                   type: BIGINT
                   constraints:
                     nullable: false
-                    primaryKey: true
-                    primaryKeyName: resize_id
+
+
 
         - addForeignKeyConstraint:
             baseTableName: jewelry_resize
@@ -62,3 +59,8 @@ databaseChangeLog:
             validate: true
             deferrable: false
             initiallyDeferred: false
+
+        - addPrimaryKey:
+            tableName: jewelry_resize
+            columnNames: jewelry_id, resize_id
+            constraintName: jewelry_resize_pk

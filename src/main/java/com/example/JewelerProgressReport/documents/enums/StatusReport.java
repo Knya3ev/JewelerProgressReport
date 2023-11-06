@@ -5,7 +5,7 @@ public enum StatusReport {
     UNIQUE("UNQ"),
     ORDINARY("ORY"),
     REJECTION("RTN"),
-    COUNSELING("CSG"),
+    CONSULTATION("CTN"),
     SERVICE("SRC");
     private final String code;
 

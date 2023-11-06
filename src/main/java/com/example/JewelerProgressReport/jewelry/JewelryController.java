@@ -3,7 +3,6 @@ package com.example.JewelerProgressReport.jewelry;
 import com.example.JewelerProgressReport.jewelry.enums.Metal;
 import com.example.JewelerProgressReport.jewelry.gold_price.GoldService;
 import com.example.JewelerProgressReport.jewelry.response.JewelryResponse;
-import com.example.JewelerProgressReport.util.map.JewelryMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +18,12 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class JewelryController {
     private final JewelryService jewelryService;
-    private final JewelryMapper jewelryMapper;
     private final GoldService goldService;
-
 
     @GetMapping()
     @Operation(summary = "Get Jewelry and her size adjustment")
     public ResponseEntity<JewelryResponse> getByArticle(@RequestParam("article") String article){
-        return ResponseEntity.ok(jewelryMapper.toJewelryResponse(jewelryService.read(article)));
+        return ResponseEntity.ok(jewelryService.get(article));
     }
 
     @GetMapping("/gold/price")

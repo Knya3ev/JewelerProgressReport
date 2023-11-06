@@ -1,8 +1,10 @@
 package com.example.JewelerProgressReport.documents;
 
 import com.example.JewelerProgressReport.documents.enums.StatusReport;
+import com.example.JewelerProgressReport.documents.request.ReportCounselingRequest;
 import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.documents.response.ReportModeration;
+import com.example.JewelerProgressReport.documents.response.ResponseCounseling;
 import com.example.JewelerProgressReport.exception.HttpException;
 import com.example.JewelerProgressReport.jewelry.JewelryService;
 import com.example.JewelerProgressReport.jewelry.jewelry_resize.JewelryResizeService;
@@ -12,12 +14,14 @@ import com.example.JewelerProgressReport.users.user.User;
 import com.example.JewelerProgressReport.users.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,24 +43,30 @@ public class ReportService {
 
         user.addReport(report);
 
-        if(user.getShop() != null) {
-            user.getShop().getReports().add(report);
+        if (user.getShop() != null) {
+            report.setShop(user.getShop());
         }
 
         if (reportRequest.getArticle() != null) {
             boolean isHaveJewelry = jewelryResizeService.CheckoutUniqueJewelry(reportRequest);
-            report.setStatus(isHaveJewelry? StatusReport.ORDINARY : StatusReport.MODERATION);
+            report.setStatus(isHaveJewelry ? StatusReport.ORDINARY : StatusReport.MODERATION);
         }
 
         reportRepository.save(report);
         return report;
     }
 
-    @Transactional
     public ReportModeration approveReportResize(Long reportId, boolean unique) {
         Report report = read(reportId);
-        report.setStatus(unique? StatusReport.UNIQUE : StatusReport.ORDINARY);
+
+        if(report.getStatus().equals(StatusReport.UNIQUE)){
+            throw new HttpException("This adjustment has already been approved", HttpStatus.BAD_REQUEST);
+        }
+
+        report.setStatus(unique ? StatusReport.UNIQUE : StatusReport.ORDINARY);
         jewelryService.createJewelryIfIsNotNullArticle(report);
+        checkConsultation(report);
+
         return reportMapper.toReportModeration(report);
     }
 
@@ -65,6 +75,46 @@ public class ReportService {
         Report report = read(reportId);
         report.setStatus(StatusReport.REJECTION);
         return reportMapper.toReportModeration(report);
+    }
+
+    @Transactional
+    public ResponseCounseling createCounseling(Long userId, ReportCounselingRequest request) {
+        boolean isHaveJewelry = jewelryResizeService.CheckoutUniqueJewelry(request);
+
+        boolean isHaveConsultation = reportRepository.checkConsultation(
+                request.getArticle(),
+                request.getSizeBefore(),
+                request.getSizeAfter(),
+                StatusReport.CONSULTATION.getCode()).isPresent();
+
+        if (isHaveJewelry || isHaveConsultation) {
+            throw new HttpException(
+                    "The jewelry already exists in the database, or a consultation for this product already exists ",
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userService.getUser(userId);
+        Report report = reportMapper.toReport(request);
+
+        user.addReport(report);
+
+        if(user.getShop() != null){
+            report.setShop(user.getShop());
+        }
+        reportRepository.save(report);
+        return reportMapper.toResponseCounseling(report);
+    }
+
+    public void checkConsultation(Report reportRequest) {
+        Optional<Report> report = reportRepository.checkConsultation(
+                reportRequest.getArticle(),
+                reportRequest.getSizeBefore(),
+                reportRequest.getSizeAfter(),
+                StatusReport.CONSULTATION.getCode());
+
+        if(report.isPresent()){
+            delete(report.get().getId());
+        }
     }
 
     public Report read(Long id) {
@@ -85,11 +135,11 @@ public class ReportService {
             throw new HttpException("You cannot change the unique record", HttpStatus.BAD_REQUEST);
         }
 
-        if(reportRequest.getArticle() != null
-                && reportRequest.getSizeAfter() != null && reportRequest.getSizeBefore() != null){
+        if (reportRequest.getArticle() != null
+                && reportRequest.getSizeAfter() != null && reportRequest.getSizeBefore() != null) {
 
             boolean isHaveJewelry = jewelryResizeService.CheckoutUniqueJewelry(reportRequest);
-            reportUpdate.setStatus(isHaveJewelry? StatusReport.ORDINARY : StatusReport.MODERATION);
+            reportUpdate.setStatus(isHaveJewelry ? StatusReport.ORDINARY : StatusReport.MODERATION);
         }
 
         Report report = reportMapper.toReport(reportRequest);
@@ -108,12 +158,17 @@ public class ReportService {
         reportUpdate.setEditDate(LocalDateTime.now());
     }
 
-    @Transactional
+
     public void delete(Long id) {
         Report report = this.read(id);
-        report.removePersonAndClientAndResizes();
+
+        if (report.getClient() != null && report.getResize() != null) {
+            report.removePersonAndClientAndResizes();
+        }
+
         reportRepository.delete(report);
     }
+
     public List<Report> readAllModeration() {
         return reportRepository.findAllByStatus(StatusReport.MODERATION.getCode());
     }
@@ -130,22 +185,23 @@ public class ReportService {
         return reportRepository.findAllByStatus(StatusReport.ORDINARY.getCode());
     }
 
-    public int getCountReportModeration(Long shopId){
+    public int getCountReportModeration(Long shopId) {
         return reportRepository.countReportByStatus(shopId, StatusReport.MODERATION.getCode());
     }
 
-    public int getCountReportUniqueness(Long shopId){
+    public int getCountReportUniqueness(Long shopId) {
         return reportRepository.countReportByStatus(shopId, StatusReport.UNIQUE.getCode());
     }
 
-    public int getCountReportRejection(Long shopId){
+    public int getCountReportRejection(Long shopId) {
         return reportRepository.countReportByStatus(shopId, StatusReport.REJECTION.getCode());
     }
 
-    public int getCountReportOrdinary(Long shopId){
+    public int getCountReportOrdinary(Long shopId) {
         return reportRepository.countReportByStatus(shopId, StatusReport.ORDINARY.getCode());
     }
-    public int getAllCount(Long shopId){
+
+    public int getAllCount(Long shopId) {
         return reportRepository.countAllResizes(shopId);
     }
 }

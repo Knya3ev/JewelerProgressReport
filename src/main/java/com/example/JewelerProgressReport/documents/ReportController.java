@@ -1,9 +1,11 @@
 package com.example.JewelerProgressReport.documents;
 
 
+import com.example.JewelerProgressReport.documents.request.ReportCounselingRequest;
 import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.documents.response.ReportModeration;
 import com.example.JewelerProgressReport.documents.response.ReportResponse;
+import com.example.JewelerProgressReport.documents.response.ResponseCounseling;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,24 +33,31 @@ public class ReportController {
     private final ReportMapper reportMapper;
 
     @Operation(summary = "Creating report")
-    @PostMapping(value = "/{personId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ReportResponse> create(@PathVariable("personId") Long personId,
+    @PostMapping(value = "/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReportResponse> create(@PathVariable("userId") Long userId,
                                                  @RequestBody @Valid ReportRequest reportRequest) {
-        return ResponseEntity.ok().body(reportMapper.toReportResponse(reportService.create(personId, reportRequest)));
+        return ResponseEntity.ok().body(reportMapper.toReportResponse(reportService.create(userId, reportRequest)));
+    }
+
+    @Operation(summary = "Create report Consultation")
+    @PostMapping(value = "/{userId}/consultation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseCounseling> createConsultation(@PathVariable("userId") Long userId,
+                                                                 @RequestBody @Valid ReportCounselingRequest request){
+        return ResponseEntity.ok(reportService.createCounseling(userId,request));
     }
 
     @Operation(summary = "Update report ")
-    @PatchMapping(value = "/{id}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> update(@PathVariable("id") Long id,
+    @PatchMapping(value = "/{reportId}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> update(@PathVariable("reportId") Long reportId,
                                        @RequestBody @Valid ReportRequest reportRequest) {
-        reportService.update(reportRequest, id);
+        reportService.update(reportRequest, reportId);
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "Get report by id")
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ReportResponse> get(@PathVariable("id") Long id) {
-        return ResponseEntity.ok().body(reportMapper.toReportResponse(reportService.read(id)));
+    @Operation(summary = "Get report by reportId")
+    @GetMapping(value = "/{reportId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReportResponse> get(@PathVariable("reportId") Long reportId) {
+        return ResponseEntity.ok().body(reportMapper.toReportResponse(reportService.read(reportId)));
     }
 
     @Operation(summary = "Get all reports")
@@ -57,9 +66,9 @@ public class ReportController {
         return ResponseEntity.ok().body(reportMapper.toReportResponse(reportService.readAll()));
     }
     @Operation(summary = "Delete report")
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        reportService.delete(id);
+    @DeleteMapping(value = "/{reportId}")
+    public ResponseEntity<Void> delete(@PathVariable("reportId") Long reportId) {
+        reportService.delete(reportId);
         return ResponseEntity.ok().build();
     }
 

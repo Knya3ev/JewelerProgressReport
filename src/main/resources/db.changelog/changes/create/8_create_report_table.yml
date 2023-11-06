@@ -70,7 +70,7 @@ databaseChangeLog:
                   name: client_id
                   type: BIGINT
                   constraints:
-                    nullable: false
+                    nullable: true
                     foreignKeyName: report_client_fk
 
               - column:
@@ -101,7 +101,7 @@ databaseChangeLog:
             constraintName: report_client_fk
             referencedTableName: client
             referencedColumnNames: id
-            onDelete: CASCADE
+            onDelete: SET NULL
 
         - addForeignKeyConstraint:
             baseTableName: report
@@ -109,7 +109,7 @@ databaseChangeLog:
             constraintName: report_users_fk
             referencedTableName: users
             referencedColumnNames: id
-            onDelete: CASCADE
+            onDelete: SET NULL
 
         - addForeignKeyConstraint:
             baseTableName: report
@@ -117,7 +117,7 @@ databaseChangeLog:
             constraintName: report_resize_fk
             referencedTableName: resize
             referencedColumnNames: id
-            onDelete: CASCADE
+            onDelete: SET NULL
 
         - addForeignKeyConstraint:
             baseTableName: report
@@ -125,5 +125,5 @@ databaseChangeLog:
             constraintName: report_shop_fk
             referencedTableName: shop
             referencedColumnNames: id
-            onDelete: CASCADE
+            onDelete: SET NULL
 

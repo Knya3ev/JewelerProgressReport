@@ -1,9 +1,11 @@
 package com.example.JewelerProgressReport.documents;
 
 import com.example.JewelerProgressReport.documents.enums.StatusReport;
+import com.example.JewelerProgressReport.documents.request.ReportCounselingRequest;
 import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.documents.response.ReportModeration;
 import com.example.JewelerProgressReport.documents.response.ReportResponse;
+import com.example.JewelerProgressReport.documents.response.ResponseCounseling;
 import com.example.JewelerProgressReport.jewelry.enums.JewelleryOperation;
 import com.example.JewelerProgressReport.jewelry.enums.JewelleryProduct;
 import com.example.JewelerProgressReport.jewelry.enums.Metal;
@@ -14,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -90,13 +91,7 @@ public class ReportMapper {
         if (reportList == null) {
             return null;
         }
-
-        List<ReportResponse> list = new ArrayList<ReportResponse>(reportList.size());
-        for (Report report : reportList) {
-            list.add(toReportResponse(report));
-        }
-
-        return list;
+        return reportList.stream().map(this ::toReportResponse).toList();
     }
 
     public ReportModeration toReportModeration(Report report){
@@ -123,12 +118,39 @@ public class ReportMapper {
         if (reportList == null) {
             return null;
         }
+        return reportList.stream().map(this::toReportModeration).toList();
+    }
 
-        List<ReportModeration> list = new ArrayList<ReportModeration>(reportList.size());
-        for (Report report : reportList) {
-            list.add(toReportModeration(report));
+    public Report toReport(ReportCounselingRequest request){
+        if (request == null) {
+            return null;
         }
+        return Report.builder()
+                .sizeBefore(request.getSizeBefore())
+                .sizeAfter(request.getSizeAfter())
+                .article(request.getArticle())
+                .metal(Metal.fromCode(request.getMetal()))
+                .jewelleryProduct(JewelleryProduct.fromCode(request.getJewelleryProduct()))
+                .status(StatusReport.CONSULTATION)
+                .createdDate(LocalDateTime.now())
+                .build();
+    }
+    public ResponseCounseling toResponseCounseling(Report report){
+        if (report == null) {
+            return null;
+        }
+        return ResponseCounseling.builder()
+                .id(report.getId())
+                .article(report.getArticle())
+                .singResize(sizeRingService.getSizeAdjustmentStringFormatted(report.getSizeBefore(),report.getSizeAfter()))
+                .nameShop(report.getShop().getName())
+                .build();
+    }
 
-        return list;
+    public List<ResponseCounseling> toResponseCounseling(List<Report> reportList){
+        if (reportList == null) {
+            return null;
+        }
+        return reportList.stream().map(this::toResponseCounseling).toList();
     }
 }
