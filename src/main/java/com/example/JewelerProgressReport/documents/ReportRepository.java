@@ -12,19 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long> {
-    @Query("""
-            SELECT r
-            FROM Report r
-            WHERE r.client.id = :clientId
-            """)
-    List<Report> findByReportsByIdClient(@Param("clientId") Long id);
-
-    @Query("""
-            SELECT r
-            FROM Report r
-            WHERE r.user.id = :personId
-            """)
-    List<Report> findByReportsByIdPerson(@Param("personId") Long id);
 
     @Query("""
             SELECT r FROM

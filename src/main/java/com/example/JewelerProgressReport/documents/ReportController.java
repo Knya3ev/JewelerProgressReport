@@ -1,6 +1,7 @@
 package com.example.JewelerProgressReport.documents;
 
 
+import com.example.JewelerProgressReport.documents.enums.StatusReport;
 import com.example.JewelerProgressReport.documents.request.ReportCounselingRequest;
 import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.documents.response.ReportModeration;
@@ -75,25 +76,25 @@ public class ReportController {
     @Operation(summary = "Get all reports that are being moderated")
     @GetMapping(value = "/all/moderation", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ReportModeration>> getAllModerationReport() {
-        return ResponseEntity.ok(reportMapper.toReportModeration(reportService.readAllModeration()));
+        return ResponseEntity.ok(reportService.getAllReportByStatus(StatusReport.MODERATION));
     }
 
     @Operation(summary = "Get all reports that are unique")
     @GetMapping(value = "/all/uniqueness", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ReportModeration>> getAllUniquenessReport() {
-        return ResponseEntity.ok(reportMapper.toReportModeration(reportService.readAllUniqueness()));
+        return ResponseEntity.ok(reportService.getAllReportByStatus(StatusReport.UNIQUE));
     }
 
     @Operation(summary = "Get all reports that are rejection")
     @GetMapping(value = "/all/rejection", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ReportModeration>> getAllRejectionReport() {
-        return ResponseEntity.ok(reportMapper.toReportModeration(reportService.readAllRejection()));
+        return ResponseEntity.ok(reportService.getAllReportByStatus(StatusReport.REJECTION));
     }
 
     @Operation(summary = "Get all reports that are normal")
     @GetMapping(value = "/all/ordinary", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ReportModeration>> getAllOrdinaryReport() {
-        return ResponseEntity.ok(reportMapper.toReportModeration(reportService.readAllOrdinary()));
+        return ResponseEntity.ok(reportService.getAllReportByStatus(StatusReport.ORDINARY));
     }
 
     @Operation(summary = "confirmation that the product is unique or commonplace ")

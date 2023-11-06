@@ -14,7 +14,6 @@ import com.example.JewelerProgressReport.users.user.User;
 import com.example.JewelerProgressReport.users.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -126,7 +125,6 @@ public class ReportService {
         return reportRepository.findAll();
     }
 
-
     @Transactional
     public void update(ReportRequest reportRequest, Long id) {
         Report reportUpdate = this.read(id);
@@ -158,7 +156,6 @@ public class ReportService {
         reportUpdate.setEditDate(LocalDateTime.now());
     }
 
-
     public void delete(Long id) {
         Report report = this.read(id);
 
@@ -169,36 +166,12 @@ public class ReportService {
         reportRepository.delete(report);
     }
 
-    public List<Report> readAllModeration() {
-        return reportRepository.findAllByStatus(StatusReport.MODERATION.getCode());
+    public List<ReportModeration> getAllReportByStatus(StatusReport status) {
+        return reportMapper.toReportModeration(reportRepository.findAllByStatus(status.getCode()));
     }
 
-    public List<Report> readAllUniqueness() {
-        return reportRepository.findAllByStatus(StatusReport.UNIQUE.getCode());
-    }
-
-    public List<Report> readAllRejection() {
-        return reportRepository.findAllByStatus(StatusReport.REJECTION.getCode());
-    }
-
-    public List<Report> readAllOrdinary() {
-        return reportRepository.findAllByStatus(StatusReport.ORDINARY.getCode());
-    }
-
-    public int getCountReportModeration(Long shopId) {
-        return reportRepository.countReportByStatus(shopId, StatusReport.MODERATION.getCode());
-    }
-
-    public int getCountReportUniqueness(Long shopId) {
-        return reportRepository.countReportByStatus(shopId, StatusReport.UNIQUE.getCode());
-    }
-
-    public int getCountReportRejection(Long shopId) {
-        return reportRepository.countReportByStatus(shopId, StatusReport.REJECTION.getCode());
-    }
-
-    public int getCountReportOrdinary(Long shopId) {
-        return reportRepository.countReportByStatus(shopId, StatusReport.ORDINARY.getCode());
+    public int getCountReportsByStatusAndId(Long shopId, StatusReport status){
+        return reportRepository.countReportByStatus(shopId,status.getCode());
     }
 
     public int getAllCount(Long shopId) {

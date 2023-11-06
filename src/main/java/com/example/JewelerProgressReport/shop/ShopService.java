@@ -2,6 +2,7 @@ package com.example.JewelerProgressReport.shop;
 
 import com.example.JewelerProgressReport.config.SettingProperties;
 import com.example.JewelerProgressReport.documents.ReportService;
+import com.example.JewelerProgressReport.documents.enums.StatusReport;
 import com.example.JewelerProgressReport.exception.HttpException;
 import com.example.JewelerProgressReport.shop.request.ShopRequest;
 import com.example.JewelerProgressReport.shop.response.ShopResponse;
@@ -151,10 +152,10 @@ public class ShopService {
                 .id(shopId)
                 .name(getShop(shopId).getName())
                 .all(reportService.getAllCount(shopId))
-                .moderation(reportService.getCountReportModeration(shopId))
-                .uniqueness(reportService.getCountReportUniqueness(shopId))
-                .ordinary(reportService.getCountReportOrdinary(shopId))
-                .rejection(reportService.getCountReportRejection(shopId))
+                .moderation(reportService.getCountReportsByStatusAndId(shopId, StatusReport.MODERATION))
+                .uniqueness(reportService.getCountReportsByStatusAndId(shopId, StatusReport.UNIQUE))
+                .ordinary(reportService.getCountReportsByStatusAndId(shopId, StatusReport.ORDINARY))
+                .rejection(reportService.getCountReportsByStatusAndId(shopId, StatusReport.REJECTION))
                 .build();
 
     }
@@ -199,7 +200,7 @@ public class ShopService {
         return ShopResponseCountModerationReports.builder()
                 .id(shop.getId())
                 .name(shop.getName())
-                .moderation(reportService.getCountReportModeration(shop.getId()))
+                .moderation(reportService.getCountReportsByStatusAndId(shop.getId(), StatusReport.MODERATION))
                 .build();
     }
 
