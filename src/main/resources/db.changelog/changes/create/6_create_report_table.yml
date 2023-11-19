@@ -81,13 +81,6 @@ databaseChangeLog:
                     foreignKeyName: report_user_fk
 
               - column:
-                  name: resize_id
-                  type: BIGINT
-                  constraints:
-                    nullable: true
-                    foreignKeyName: report_resize_fk
-
-              - column:
                   name: shop_id
                   type: BIGINT
                   constraints:
@@ -111,13 +104,6 @@ databaseChangeLog:
             referencedColumnNames: id
             onDelete: SET NULL
 
-        - addForeignKeyConstraint:
-            baseTableName: report
-            baseColumnNames: resize_id
-            constraintName: report_resize_fk
-            referencedTableName: resize
-            referencedColumnNames: id
-            onDelete: SET NULL
 
         - addForeignKeyConstraint:
             baseTableName: report

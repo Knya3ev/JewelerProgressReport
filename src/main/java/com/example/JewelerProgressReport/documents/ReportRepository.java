@@ -14,14 +14,23 @@ import java.util.Optional;
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
     @Query("""
-            SELECT r FROM
-            Report r
+            SELECT r
+            FROM Report r
             WHERE r.createdDate >= :startDate AND r.createdDate <= :endDate AND r.user.id = :personId
             """)
     List<Report> getListForDocument(
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate,
             @Param("personId") Long personId);
+
+    @Query("""
+            SELECT r
+            FROM Report r
+            WHERE r.article = :article AND r.sizeBefore = :before AND r.sizeAfter = :after
+            """)
+    Optional<Report> getJewelryArticleAndResizes(@Param("article") String article,
+                                                 @Param("before") Double before,
+                                                 @Param("after") Double after );
 
     @Query(value = """
             SELECT *

@@ -7,8 +7,6 @@ import com.example.JewelerProgressReport.documents.response.ReportModeration;
 import com.example.JewelerProgressReport.documents.response.ResponseCounseling;
 import com.example.JewelerProgressReport.exception.HttpException;
 import com.example.JewelerProgressReport.jewelry.JewelryService;
-import com.example.JewelerProgressReport.jewelry.jewelry_resize.JewelryResizeService;
-import com.example.JewelerProgressReport.jewelry.resize.SizeRingService;
 import com.example.JewelerProgressReport.users.client.ClientService;
 import com.example.JewelerProgressReport.users.user.User;
 import com.example.JewelerProgressReport.users.user.UserService;
@@ -30,15 +28,13 @@ public class ReportService {
     private final ClientService clientService;
     private final UserService userService;
     private final JewelryService jewelryService;
-    private final JewelryResizeService jewelryResizeService;
-    private final SizeRingService sizeRingService;
     private final ReportMapper reportMapper;
 
 
     @Transactional
-    public Report create(Long personId, ReportRequest reportRequest) {
+    public Report create(Long personId, ReportRequest request) {
         User user = userService.getUser(personId);
-        Report report = reportMapper.toReport(reportRequest);
+        Report report = reportMapper.toReport(request);
 
         user.addReport(report);
 
@@ -46,8 +42,9 @@ public class ReportService {
             report.setShop(user.getShop());
         }
 
-        if (reportRequest.getArticle() != null) {
-            boolean isHaveJewelry = jewelryResizeService.CheckoutUniqueJewelry(reportRequest);
+        if (request.getArticle() != null) {
+            boolean isHaveJewelry =
+                    jewelryService.CheckoutUniqueJewelry(request.getArticle(),request.getSizeBefore(),request.getSizeAfter());
             report.setStatus(isHaveJewelry ? StatusReport.ORDINARY : StatusReport.MODERATION);
         }
 
@@ -78,7 +75,8 @@ public class ReportService {
 
     @Transactional
     public ResponseCounseling createCounseling(Long userId, ReportCounselingRequest request) {
-        boolean isHaveJewelry = jewelryResizeService.CheckoutUniqueJewelry(request);
+        boolean isHaveJewelry = jewelryService
+                .CheckoutUniqueJewelry(request.getArticle(), request.getSizeBefore(), request.getSizeAfter());
 
         boolean isHaveConsultation = reportRepository.checkConsultation(
                 request.getArticle(),
@@ -126,32 +124,33 @@ public class ReportService {
     }
 
     @Transactional
-    public void update(ReportRequest reportRequest, Long id) {
+    public void update(ReportRequest request, Long id) {
         Report reportUpdate = this.read(id);
 
         if (reportUpdate.getStatus().equals(StatusReport.UNIQUE)) {
             throw new HttpException("You cannot change the unique record", HttpStatus.BAD_REQUEST);
         }
 
-        if (reportRequest.getArticle() != null
-                && reportRequest.getSizeAfter() != null && reportRequest.getSizeBefore() != null) {
+        if (request.getArticle() != null
+                && request.getSizeAfter() != null && request.getSizeBefore() != null) {
 
-            boolean isHaveJewelry = jewelryResizeService.CheckoutUniqueJewelry(reportRequest);
+            boolean isHaveJewelry = jewelryService
+                    .CheckoutUniqueJewelry(request.getArticle(),request.getSizeBefore(),request.getSizeAfter());
+
             reportUpdate.setStatus(isHaveJewelry ? StatusReport.ORDINARY : StatusReport.MODERATION);
         }
 
-        Report report = reportMapper.toReport(reportRequest);
+        Report report = reportMapper.toReport(request);
 
         reportUpdate.setJewelleryProduct(report.getJewelleryProduct());
         reportUpdate.setMetal(report.getMetal());
         reportUpdate.setJewelleryOperations(report.getJewelleryOperations());
         reportUpdate.setDetailsOfOperation(report.getDetailsOfOperation());
-        reportUpdate.setSizeBefore(reportRequest.getSizeBefore());
-        reportUpdate.setSizeAfter(reportRequest.getSizeAfter());
-        reportUpdate.setResize(sizeRingService.checkoutSizeRingOrCreate(report.getResize().getBefore(), report.getResize().getAfter()));
+        reportUpdate.setSizeBefore(request.getSizeBefore());
+        reportUpdate.setSizeAfter(request.getSizeAfter());
         reportUpdate.setUnionCodeJewelry(report.getUnionCodeJewelry());
         reportUpdate.setArticle(report.getArticle());
-        reportUpdate.setClient(clientService.checkoutClientOrCreate(reportRequest.getPhoneNumber(), true));
+        reportUpdate.setClient(clientService.checkoutClientOrCreate(request.getPhoneNumber(), true));
         reportUpdate.setEdit(true);
         reportUpdate.setEditDate(LocalDateTime.now());
     }
@@ -159,7 +158,7 @@ public class ReportService {
     public void delete(Long id) {
         Report report = this.read(id);
 
-        if (report.getClient() != null && report.getResize() != null) {
+        if (report.getClient() != null) {
             report.removePersonAndClientAndResizes();
         }
 

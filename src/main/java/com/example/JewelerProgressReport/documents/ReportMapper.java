@@ -6,10 +6,10 @@ import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.documents.response.ReportModeration;
 import com.example.JewelerProgressReport.documents.response.ReportResponse;
 import com.example.JewelerProgressReport.documents.response.ResponseCounseling;
+import com.example.JewelerProgressReport.jewelry.JewelryService;
 import com.example.JewelerProgressReport.jewelry.enums.JewelleryOperation;
 import com.example.JewelerProgressReport.jewelry.enums.JewelleryProduct;
 import com.example.JewelerProgressReport.jewelry.enums.Metal;
-import com.example.JewelerProgressReport.jewelry.resize.SizeRingService;
 import com.example.JewelerProgressReport.users.client.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,16 +23,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ReportMapper {
-
-    private final SizeRingService sizeRingService;
     private final ClientService clientService;
 
     public Report toReport(ReportRequest reportRequest) {
 
         List<JewelleryOperation> operations = reportRequest.getJewelleryOperation()
                 .stream().map(operation -> JewelleryOperation.fromCode(operation)).collect(Collectors.toList());
-
-        //TODO: реализовать проверку if(item != консультация)
 
         operations.addAll(0, JewelleryOperation.getStandardOperation(reportRequest.getMetal()));
 
@@ -41,11 +37,6 @@ public class ReportMapper {
                 .metal(Metal.fromCode(reportRequest.getMetal()))
                 .jewelleryOperations(operations)
                 .detailsOfOperation(reportRequest.getDetailsOfOperation())
-
-                .resize(reportRequest.getSizeBefore() != null && reportRequest.getSizeAfter() != null ?
-                        sizeRingService.checkoutSizeRingOrCreate(reportRequest.getSizeBefore(), reportRequest.getSizeAfter())
-                        : null)
-
                 .sizeBefore(reportRequest.getSizeBefore())
                 .sizeAfter(reportRequest.getSizeAfter())
                 .unionCodeJewelry(reportRequest.getUnionCodeJewelry())
@@ -76,7 +67,7 @@ public class ReportMapper {
         reportResponse.setDetailsOfOperation(report.getDetailsOfOperation());
         reportResponse.setUnionCodeJewelry(report.getUnionCodeJewelry());
         reportResponse.setPhoneNumber(report.getClient().getNumberPhone());
-        reportResponse.setResize(report.getResize() != null? report.getResize().getRingResizing(): null);
+        reportResponse.setResize(sizeFormatted(report.getSizeBefore(), report.getSizeAfter()));
         reportResponse.setArticle(report.getArticle());
         reportResponse.setCount(report.getCount());
         if (report.getCreatedDate() != null) {
@@ -142,7 +133,7 @@ public class ReportMapper {
         return ResponseCounseling.builder()
                 .id(report.getId())
                 .article(report.getArticle())
-                .singResize(sizeRingService.getSizeAdjustmentStringFormatted(report.getSizeBefore(),report.getSizeAfter()))
+                .singResize(sizeFormatted(report.getSizeBefore(),report.getSizeAfter()))
                 .nameShop(report.getShop().getName())
                 .build();
     }
@@ -152,5 +143,11 @@ public class ReportMapper {
             return null;
         }
         return reportList.stream().map(this::toResponseCounseling).toList();
+    }
+    public String sizeFormatted(Double sizeBefore, Double sizeAfter){
+        if(sizeBefore == null || sizeAfter == null) {
+            return null;
+        }
+        return String.format("%.2f -> %.2f", sizeBefore, sizeAfter);
     }
 }

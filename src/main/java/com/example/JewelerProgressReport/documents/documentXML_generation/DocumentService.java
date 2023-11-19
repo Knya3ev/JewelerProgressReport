@@ -2,6 +2,7 @@ package com.example.JewelerProgressReport.documents.documentXML_generation;
 
 
 import com.example.JewelerProgressReport.documents.Report;
+import com.example.JewelerProgressReport.documents.ReportMapper;
 import com.example.JewelerProgressReport.documents.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 public class DocumentService {
 
     private final ReportRepository reportRepository;
+    private final ReportMapper reportMapper;
     private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 
@@ -44,12 +46,13 @@ public class DocumentService {
             "уникальный код"
     };
 
-    public String getFileName(int month, int year){
+    public String getFileName(int month, int year) {
         YearMonth yearMonth = year > 1 ? YearMonth.of(year, month) : YearMonth.of(LocalDate.now().getYear(), Month.of(month));
 
         return "report_for_%s_%d.xlsx"
-                .formatted( Month.of(month).toString().toLowerCase(),yearMonth.getYear());
+                .formatted(Month.of(month).toString().toLowerCase(), yearMonth.getYear());
     }
+
     public InputStreamResource generationDocument(Long personId, int month, int year) {
 
         Workbook workbook = new XSSFWorkbook();
@@ -57,7 +60,7 @@ public class DocumentService {
         Sheet sheet = workbook.createSheet("Data");
 
         this.createHeader(sheet);
-        this.writerData(getListReport(personId,month,0),sheet);
+        this.writerData(getListReport(personId, month, 0), sheet);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -103,7 +106,8 @@ public class DocumentService {
             phoneNumber.setCellValue(report.getClient().getNumberPhone());
 
             Cell resize = row.createCell(5);
-            resize.setCellValue(report.getResize() == null ? "" : report.getResize().getRingResizing());
+            String sizeFormatted = reportMapper.sizeFormatted(report.getSizeBefore(), report.getSizeAfter());
+            resize.setCellValue(sizeFormatted == null ? "" : sizeFormatted);
 
             Cell typeOfOperation = row.createCell(6);
             typeOfOperation.setCellValue(
