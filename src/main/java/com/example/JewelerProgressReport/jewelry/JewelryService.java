@@ -4,18 +4,12 @@ package com.example.JewelerProgressReport.jewelry;
 import com.example.JewelerProgressReport.documents.Report;
 import com.example.JewelerProgressReport.documents.ReportMapper;
 import com.example.JewelerProgressReport.documents.ReportRepository;
-import com.example.JewelerProgressReport.documents.ReportService;
 import com.example.JewelerProgressReport.documents.enums.StatusReport;
 import com.example.JewelerProgressReport.documents.response.ResponseCounseling;
 import com.example.JewelerProgressReport.exception.HttpException;
-import com.example.JewelerProgressReport.jewelry.jewelry_resize.JewelryResize;
-import com.example.JewelerProgressReport.jewelry.jewelry_resize.JewelryResizeRepository;
-import com.example.JewelerProgressReport.jewelry.resize.Resize;
-import com.example.JewelerProgressReport.jewelry.resize.SizeRingService;
 import com.example.JewelerProgressReport.jewelry.response.JewelryResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +20,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JewelryService {
     private final JewelryRepository jewelryRepository;
-    private final SizeRingService sizeRingService;
-    private final JewelryResizeRepository jewelryResizeRepository;
     private final ReportMapper reportMapper;
     private final ReportRepository reportRepository;
 
@@ -39,6 +31,7 @@ public class JewelryService {
     public JewelryResponse get(String article) {
         return toJewelryResponse(read(article));
     }
+
     @Transactional
     public void createJewelryIfIsNotNullArticle(Report report) {
 
@@ -53,8 +46,6 @@ public class JewelryService {
         if(!report.getClient().getJewelries().contains(jewelry)){
             report.getClient().addJewelry(jewelry);
         }
-
-        this.addSizeRing(report, jewelry);
     }
 
     @Transactional
@@ -62,21 +53,23 @@ public class JewelryService {
        return jewelryRepository.save(jewelry);
     }
 
-    @Transactional
-    private void addSizeRing(Report report, Jewelry jewelry) {
-        Resize resize = sizeRingService
-                .checkoutSizeRingOrCreate(report.getSizeBefore(), report.getSizeAfter());
-
-        jewelryResizeRepository.save(
-                JewelryResize.builder()
-                        .jewelry(jewelry)
-                        .resize(resize)
-                        .build());
-    }
-
     private List<ResponseCounseling> getConsultation(String article){
         return reportMapper.toResponseCounseling(
                 reportRepository.findAllByStatusAndArticle(article, StatusReport.CONSULTATION.getCode()));
+    }
+
+    public boolean CheckoutUniqueJewelry(String article, Double before, Double after) {
+        Optional<Jewelry> jewelry = jewelryRepository.findByArticle(article);
+
+        if (jewelry.isEmpty()) {
+            return false;
+        }
+
+        Optional<Report> jewelryResult = reportRepository.getJewelryArticleAndResizes(article,before,after);
+
+        //TODO: проверка чтобы размер был либо больше самого маленького размера либо больше самого большого
+
+        return jewelryResult.isPresent();
     }
 
     private JewelryResponse toJewelryResponse(Jewelry jewelry) {
@@ -88,7 +81,9 @@ public class JewelryService {
                 .jewelleryProduct(jewelry.getJewelleryProduct().getRu())
                 .article(jewelry.getArticle())
                 .consultations(getConsultation(jewelry.getArticle()))
-                .resizes(jewelry.getJewelryResizes().stream().map(i -> i.getResize().getRingResizing()).toList())
+                .resizes(reportRepository.findAllByStatusAndArticle(jewelry.getArticle(), StatusReport.UNIQUE.getCode())
+                        .stream()
+                        .map(i -> reportMapper.sizeFormatted(i.getSizeBefore(),i.getSizeAfter())).toList())
                 .build();
     }
 }

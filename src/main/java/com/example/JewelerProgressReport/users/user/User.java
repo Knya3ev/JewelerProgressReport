@@ -73,7 +73,5 @@ public class User {
         reports.remove(report);
         report.setUser(null);
     }
-    //TODO: реализовать возможность добавлять сотрудников
-
 }
 

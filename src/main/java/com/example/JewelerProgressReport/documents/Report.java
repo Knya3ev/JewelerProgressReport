@@ -5,7 +5,6 @@ import com.example.JewelerProgressReport.documents.enums.StatusReport;
 import com.example.JewelerProgressReport.jewelry.enums.JewelleryOperation;
 import com.example.JewelerProgressReport.jewelry.enums.JewelleryProduct;
 import com.example.JewelerProgressReport.jewelry.enums.Metal;
-import com.example.JewelerProgressReport.jewelry.resize.Resize;
 import com.example.JewelerProgressReport.shop.Shop;
 import com.example.JewelerProgressReport.users.client.Client;
 import com.example.JewelerProgressReport.users.user.User;
@@ -85,9 +84,6 @@ public class Report {
     @Column(name = "edit_date")
     private LocalDateTime editDate;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Resize resize;
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -100,10 +96,6 @@ public class Report {
     public void removePersonAndClientAndResizes() {
         user.removeReport(this);
         client.removeReport(this);
-
-        if(this.resize != null) {
-            resize.removeReport(this);
-        }
     }
 
 }
