@@ -48,4 +48,5 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
             """)
     void editCountJeweler(@Param("shopId") Long shopId,
                           @Param("count") int count);
+
 }

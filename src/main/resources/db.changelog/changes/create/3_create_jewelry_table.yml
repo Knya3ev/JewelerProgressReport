@@ -36,3 +36,9 @@ databaseChangeLog:
               - column:
                   name: type_jewelry
                   type: VARCHAR(50)
+              - column:
+                  name: lower_limit
+                  type: double precision
+              - column:
+                  name: upper_limit
+                  type: double precision

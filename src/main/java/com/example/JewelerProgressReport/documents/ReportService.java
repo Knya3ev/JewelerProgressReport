@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +29,6 @@ public class ReportService {
     private final JewelryService jewelryService;
     private final ReportMapper reportMapper;
 
-
     @Transactional
     public Report create(Long personId, ReportRequest request) {
         User user = userService.getUser(personId);
@@ -43,15 +41,20 @@ public class ReportService {
         }
 
         if (request.getArticle() != null) {
-            boolean isHaveJewelry =
-                    jewelryService.CheckoutUniqueJewelry(request.getArticle(),request.getSizeBefore(),request.getSizeAfter());
-            report.setStatus(isHaveJewelry ? StatusReport.ORDINARY : StatusReport.MODERATION);
+            report.setStatus(
+                    jewelryService.isUniqueJewelry(request)
+                            ? StatusReport.MODERATION
+                            : StatusReport.ORDINARY );
+
+            clientService.addJewelry(
+                    report.getClient().getNumberPhone(),
+                    jewelryService.getOrCreate(report.getArticle(),report.getJewelleryProduct()));
         }
 
         reportRepository.save(report);
         return report;
     }
-
+    @Transactional
     public ReportModeration approveReportResize(Long reportId, boolean unique) {
         Report report = read(reportId);
 
@@ -59,9 +62,10 @@ public class ReportService {
             throw new HttpException("This adjustment has already been approved", HttpStatus.BAD_REQUEST);
         }
 
-        report.setStatus(unique ? StatusReport.UNIQUE : StatusReport.ORDINARY);
-        jewelryService.createJewelryIfIsNotNullArticle(report);
+        jewelryService.addSizeForJewelry(report);
         checkConsultation(report);
+
+        report.setStatus(unique ? StatusReport.UNIQUE : StatusReport.ORDINARY);
 
         return reportMapper.toReportModeration(report);
     }
@@ -75,8 +79,7 @@ public class ReportService {
 
     @Transactional
     public ResponseCounseling createCounseling(Long userId, ReportCounselingRequest request) {
-        boolean isHaveJewelry = jewelryService
-                .CheckoutUniqueJewelry(request.getArticle(), request.getSizeBefore(), request.getSizeAfter());
+        boolean  isUniqueJewelry = jewelryService.isUniqueJewelry(request);
 
         boolean isHaveConsultation = reportRepository.checkConsultation(
                 request.getArticle(),
@@ -84,7 +87,7 @@ public class ReportService {
                 request.getSizeAfter(),
                 StatusReport.CONSULTATION.getCode()).isPresent();
 
-        if (isHaveJewelry || isHaveConsultation) {
+        if (!isUniqueJewelry || isHaveConsultation) {
             throw new HttpException(
                     "The jewelry already exists in the database, or a consultation for this product already exists ",
                     HttpStatus.BAD_REQUEST);
@@ -131,13 +134,11 @@ public class ReportService {
             throw new HttpException("You cannot change the unique record", HttpStatus.BAD_REQUEST);
         }
 
-        if (request.getArticle() != null
-                && request.getSizeAfter() != null && request.getSizeBefore() != null) {
-
-            boolean isHaveJewelry = jewelryService
-                    .CheckoutUniqueJewelry(request.getArticle(),request.getSizeBefore(),request.getSizeAfter());
-
-            reportUpdate.setStatus(isHaveJewelry ? StatusReport.ORDINARY : StatusReport.MODERATION);
+        if (request.getArticle() != null && request.getSizeAfter() != null && request.getSizeBefore() != null) {
+            reportUpdate.setStatus(
+                    jewelryService.isUniqueJewelry(request)
+                            ? StatusReport.MODERATION
+                            : StatusReport.ORDINARY);
         }
 
         Report report = reportMapper.toReport(request);

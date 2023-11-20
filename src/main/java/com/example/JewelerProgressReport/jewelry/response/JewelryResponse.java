@@ -15,6 +15,8 @@ public class JewelryResponse {
     private Long id;
     private String jewelleryProduct;
     private String article;
+    private Double lowerLimit;
+    private Double upperLimit;
     private List<String> resizes;
     private List<ResponseCounseling> consultations;
 }

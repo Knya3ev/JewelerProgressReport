@@ -1,6 +1,11 @@
 package com.example.JewelerProgressReport.users.client;
 
+import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.exception.HttpException;
+import com.example.JewelerProgressReport.jewelry.Jewelry;
+import com.example.JewelerProgressReport.jewelry.JewelryRepository;
+import com.example.JewelerProgressReport.jewelry.JewelryService;
+import com.example.JewelerProgressReport.jewelry.enums.JewelleryProduct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,9 +29,17 @@ public class ClientService {
         return clientRepository.findById(id)
                 .orElseThrow(() -> new HttpException("Client by id %d is not found".formatted(id), HttpStatus.NOT_FOUND));
     }
+
     public Client read(String phoneNumber) {
         return clientRepository.findByNumberPhone(phoneNumber)
                 .orElseThrow(() -> new HttpException("Client with the phone number %s is not found".formatted(phoneNumber), HttpStatus.NOT_FOUND));
+    }
+
+    public void addJewelry( String phoneNumber, Jewelry jewelry){
+        Client client = checkoutClientOrCreate(phoneNumber);
+        if (!client.getJewelries().contains(jewelry)) {
+            client.addJewelry(jewelry);
+        }
     }
 
     public List<Client> readAll() {
@@ -39,11 +52,13 @@ public class ClientService {
 
         clientUpdate.setNumberPhone(client.getNumberPhone());
     }
+
     @Transactional
     public void delete(Long id) {
         Client client = this.read(id);
         clientRepository.delete(client);
     }
+
     public Client checkoutClientOrCreate(String phoneNumber){
         return this.checkoutClient(phoneNumber,false);
     }

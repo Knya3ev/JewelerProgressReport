@@ -44,6 +44,12 @@ public class Jewelry {
     @Column(name = "type_jewelry")
     private JewelleryProduct jewelleryProduct;
 
+    @Column(name = "lower_limit")
+    private Double lowerLimit;
+
+    @Column(name = "upper_limit")
+    private Double upperLimit;
+
     @ManyToMany()
     @JoinTable(name = "jewelry_client",
             joinColumns = @JoinColumn(name = "jewelry_id"),
