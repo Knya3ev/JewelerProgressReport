@@ -4,7 +4,6 @@ package com.example.JewelerProgressReport.jewelry;
 import com.example.JewelerProgressReport.documents.Report;
 import com.example.JewelerProgressReport.documents.ReportMapper;
 import com.example.JewelerProgressReport.documents.ReportRepository;
-import com.example.JewelerProgressReport.documents.SizeForJeweler;
 import com.example.JewelerProgressReport.documents.enums.StatusReport;
 import com.example.JewelerProgressReport.documents.request.ReportCounselingRequest;
 import com.example.JewelerProgressReport.documents.request.ReportRequest;
@@ -12,16 +11,11 @@ import com.example.JewelerProgressReport.documents.response.ResponseCounseling;
 import com.example.JewelerProgressReport.exception.HttpException;
 import com.example.JewelerProgressReport.jewelry.enums.JewelleryProduct;
 import com.example.JewelerProgressReport.jewelry.response.JewelryResponse;
-import com.example.JewelerProgressReport.users.client.ClientService;
-import jakarta.persistence.Tuple;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.iterators.EmptyListIterator;
-import org.hibernate.engine.jdbc.Size;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
