@@ -1,6 +1,6 @@
 package com.example.JewelerProgressReport;
 
-import com.example.JewelerProgressReport.config.SettingProperties;
+import com.example.JewelerProgressReport.configuration.SettingProperties;
 import com.example.JewelerProgressReport.jewelry.gold_price.GoldPriceClient;
 import com.example.JewelerProgressReport.parser.EplClient;
 import org.springframework.boot.SpringApplication;

@@ -1,6 +1,6 @@
 package com.example.JewelerProgressReport.jewelry.gold_price;
 
-import com.example.JewelerProgressReport.config.SettingProperties;
+import com.example.JewelerProgressReport.configuration.SettingProperties;
 import com.example.JewelerProgressReport.jewelry.enums.Metal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

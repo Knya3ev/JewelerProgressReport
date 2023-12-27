@@ -1,11 +1,7 @@
 package com.example.JewelerProgressReport.users.client;
 
-import com.example.JewelerProgressReport.documents.request.ReportRequest;
 import com.example.JewelerProgressReport.exception.HttpException;
 import com.example.JewelerProgressReport.jewelry.Jewelry;
-import com.example.JewelerProgressReport.jewelry.JewelryRepository;
-import com.example.JewelerProgressReport.jewelry.JewelryService;
-import com.example.JewelerProgressReport.jewelry.enums.JewelleryProduct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

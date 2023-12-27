@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class ShopResponse {
+public class ShopFullResponse {
 
     private Long id;
     private String name;

@@ -81,6 +81,13 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
             """, nativeQuery = true)
     int countAllResizes(@Param("shop") Long shopId);
 
+    @Query(value = """
+            SELECT count(r)
+            FROM Report r
+            WHERE r.status = :status
+            """, nativeQuery = true)
+    int countAllByStatus(@Param("status") String status);
+
     @Query("""
             SELECT COALESCE(
             (SELECT

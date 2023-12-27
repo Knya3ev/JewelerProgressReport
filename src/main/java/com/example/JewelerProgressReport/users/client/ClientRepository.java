@@ -23,6 +23,4 @@ public interface ClientRepository extends JpaRepository<Client,Long> {
             WHERE c.id = :clientId
             """)
     void updateLastVisitAndCountVisit(@Param("clientId") Long clientId);
-
-
 }

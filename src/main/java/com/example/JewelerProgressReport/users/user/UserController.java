@@ -2,6 +2,7 @@ package com.example.JewelerProgressReport.users.user;
 
 
 import com.example.JewelerProgressReport.users.user.request.CreateUserRequest;
+import com.example.JewelerProgressReport.users.user.response.GuestResponse;
 import com.example.JewelerProgressReport.users.user.response.UserResponse;
 import com.example.JewelerProgressReport.util.map.UserMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,6 +35,18 @@ public class UserController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> create(@RequestBody @Validated CreateUserRequest createUserRequest) {
         return ResponseEntity.ok().body(userService.create(createUserRequest));
+    }
+
+    @Operation(summary = "Get profile")
+    @GetMapping
+    public ResponseEntity<UserResponse> getProfile(){
+        return ResponseEntity.ok(userMapper.toUserResponse(userService.getAuthenticated()));
+    }
+
+    @Operation(summary = "Get Guest ")
+    @GetMapping(value = "/guest", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GuestResponse> getGuestById() {
+        return ResponseEntity.ok().body(userService.getGuestResponse());
     }
 
     @Operation(summary = "Get by User id ")

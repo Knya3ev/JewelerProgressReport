@@ -1,13 +1,16 @@
 package com.example.JewelerProgressReport.shop;
 
-import com.example.JewelerProgressReport.config.SettingProperties;
+import com.example.JewelerProgressReport.configuration.SettingProperties;
 import com.example.JewelerProgressReport.documents.ReportService;
 import com.example.JewelerProgressReport.documents.enums.StatusReport;
 import com.example.JewelerProgressReport.exception.HttpException;
 import com.example.JewelerProgressReport.shop.request.ShopRequest;
-import com.example.JewelerProgressReport.shop.response.ShopResponse;
+import com.example.JewelerProgressReport.shop.response.ShopFullResponse;
 import com.example.JewelerProgressReport.shop.response.ShopResponseCountModerationReports;
 import com.example.JewelerProgressReport.shop.response.ShopResponseFullCountStatus;
+import com.example.JewelerProgressReport.shop.response.ShopResponseModeration;
+import com.example.JewelerProgressReport.shop.response.ShopShortResponse;
+import com.example.JewelerProgressReport.users.enums.roles.Role;
 import com.example.JewelerProgressReport.users.user.User;
 import com.example.JewelerProgressReport.users.user.UserService;
 import com.example.JewelerProgressReport.util.map.UserMapper;
@@ -21,7 +24,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -40,16 +47,110 @@ public class ShopService {
                 .orElseThrow(() -> new HttpException("Shop not found by id: %d".formatted(id), HttpStatus.NOT_FOUND));
     }
 
-    public ShopResponse getShopResponse(Long id) {
-        return toResponse(getShop(id));
-    }
-
-    public List<ShopResponse> getAllShops() {
-        return shopRepository.findAll().stream().map(this::toResponse).toList();
+    public ShopResponseModeration getShopModeration(Long shopId) {
+        Shop shop = getShop(shopId);
+        return toResponseModeration(shop);
     }
 
     @Transactional
-    public ShopResponse createShop(ShopRequest shopRequest, Long userId) {
+    public ShopShortResponse requestForAddingInTheShop(Long shopId) {
+        User authorized = userService.getAuthenticated();
+        // todo: подумать над регулированием изменения магазина для определенных ролей, не давать делать это директору и админестратору
+
+        if (authorized.isInStaff()) {
+            throw new HttpException("you are already an employee of \"%s\" store. you can leave the store and then try again."
+                    .formatted(authorized.getShop().getName())
+                    , HttpStatus.BAD_REQUEST);
+        }
+
+        if (authorized.isPendingApproval()) {
+            cancelRequestForAddingInTheShop(true, authorized.getId());
+        }
+
+        Shop shop = getShop(shopId);
+
+        authorized.setShop(shop);
+        authorized.setPendingApproval(true);
+
+        shop.getStaff().add(authorized);
+
+        return toShopShortResponse(shop);
+    }
+
+    public void cancelRequestForAddingInTheShop(boolean forUser, Long userId) {
+        User authorized = forUser
+                ? userService.getUser(userId)
+                : userService.getAuthenticated();
+
+        Shop shop = authorized.getShop();
+
+        shop.getStaff().remove(authorized);
+        authorized.setShop(null);
+        authorized.setPendingApproval(false);
+    }
+
+
+    public ShopFullResponse getShopResponse(Long id) {
+        return toResponse(getShop(id));
+    }
+
+    public List<ShopFullResponse> getAllShops() {
+        return shopRepository.findAll().stream().map(this::toResponse).toList();
+    }
+
+    public List<ShopShortResponse> getAllVerified() {
+        return shopRepository.findAllVerified().stream().map(this::toShopShortResponse).toList();
+    }
+
+    public List<ShopShortResponse> getAllModeration() {
+        return shopRepository.findAllModeration().stream().map(this::toShopShortResponse).toList();
+    }
+
+    @Transactional
+    public void createShopForUser(ShopRequest shopRequest) {
+        User authorized = userService.getAuthenticated();
+        Optional<Shop> request = shopRepository.findByName(shopRequest.getName().toLowerCase());
+
+        if (request.isPresent()) {
+            throw new HttpException("A store by that name '%s' exists.".formatted(shopRequest.getName()), HttpStatus.BAD_REQUEST);
+        }
+
+        Shop shop = shopRepository.save(toShop(shopRequest));
+        shop.getStaff().add(authorized);
+    }
+
+    @Transactional
+    public void approvalCreateShop(Long shopId) {
+        Shop shop = getShop(shopId);
+
+        if (shop.getStaff().isEmpty()) {
+            throw new HttpException("there's no user on the list to make him a director ", HttpStatus.BAD_REQUEST);
+        }
+
+        shop.setModeration(false);
+        shop.setPaidSubscriptionValidityPeriod(LocalDateTime
+                .now(ZoneId.of(settingProperties.getTimeZone())).plusDays(numberOfTrialSubscriptionDays));
+
+        User director = shop.getStaff().get(0);
+        director.setCountShops(director.getCountShops() + 1);
+
+        if(director.getRoles().contains(Role.ROLE_SUPER_USER)){
+            director.getRoles().add(Role.ROLE_DIRECTOR);
+        }
+
+        director.setRoles(new HashSet<>(Set.of(Role.ROLE_DIRECTOR)));
+        shop.setDirector(director);
+    }
+
+    @Transactional
+    public void cancelCreateShop(Long shopId) {
+        Shop shop = getShop(shopId);
+        shopRepository.delete(shop);
+    }
+
+
+    @Transactional
+    public ShopFullResponse createShopForDirector(ShopRequest shopRequest, Long userId) {
         User director = userService.getUser(userId);
 
         if (director.getCountShops() == 0) {
@@ -75,7 +176,7 @@ public class ShopService {
     }
 
     @Transactional
-    public ShopResponse addAdmin(Long shopId, Long userId) {
+    public ShopFullResponse addAdmin(Long shopId, Long userId) {
         User admin = userService.getUser(userId);
         Shop shop = getShop(shopId);
 
@@ -89,7 +190,7 @@ public class ShopService {
     }
 
     @Transactional
-    public ShopResponse addShopAssistants(Long shopId, Long userId) {
+    public ShopFullResponse addShopAssistants(Long shopId, Long userId) {
         User shopAssistants = userService.getUser(userId);
         Shop shop = getShop(shopId);
 
@@ -103,7 +204,7 @@ public class ShopService {
     }
 
     @Transactional
-    public ShopResponse addJeweler(Long shopId, Long userId) {
+    public ShopFullResponse addJeweler(Long shopId, Long userId) {
         Shop shop = getShop(shopId);
 
         if (shop.isHaveJeweler()) {
@@ -129,24 +230,24 @@ public class ShopService {
     }
 
     @Transactional
-    public ShopResponse editCountAdmin(Long shopId, int count) {
+    public ShopFullResponse editCountAdmin(Long shopId, int count) {
         shopRepository.editCountAdmin(shopId, count);
         return toResponse(getShop(shopId));
     }
 
     @Transactional
-    public ShopResponse editCountShopAssistants(Long shopId, int count) {
+    public ShopFullResponse editCountShopAssistants(Long shopId, int count) {
         shopRepository.editCountShopAssistants(shopId, count);
         return toResponse(getShop(shopId));
     }
 
     @Transactional
-    public ShopResponse editCountJeweler(Long shopId, int count) {
+    public ShopFullResponse editCountJeweler(Long shopId, int count) {
         shopRepository.editCountJeweler(shopId, count);
         return toResponse(getShop(shopId));
     }
 
-    public ShopResponseFullCountStatus getNumbersAllStatusesStore(Long shopId){
+    public ShopResponseFullCountStatus getNumbersAllStatusesStore(Long shopId) {
 
         return ShopResponseFullCountStatus.builder()
                 .id(shopId)
@@ -160,9 +261,16 @@ public class ShopService {
 
     }
 
-    public List<ShopResponseCountModerationReports> getCountModerationForShop(){
+    public List<ShopResponseCountModerationReports> getCountModerationForShop() {
         return shopRepository.findAll()
                 .stream().map(this::toShopResponseCountModerationReports).toList();
+    }
+
+    public ShopShortResponse toShopShortResponse(Shop shop) {
+        return ShopShortResponse.builder()
+                .id(shop.getId())
+                .name(shop.getName())
+                .build();
     }
 
     private Shop toShop(ShopRequest request, Long userId) {
@@ -177,14 +285,24 @@ public class ShopService {
                 .build();
     }
 
-    private ShopResponse toResponse(Shop shop) {
+    private Shop toShop(ShopRequest request) {
+
+        return Shop.builder()
+                .name(request.getName().toLowerCase())
+                .numberOfAdministrators(request.getNumberOfAdministrators())
+                .numberOfShopAssistants(request.getNumberOfShopAssistants())
+                .isModeration(true)
+                .build();
+    }
+
+    public ShopFullResponse toResponse(Shop shop) {
         LocalDateTime nowDate = shop.getPaidSubscriptionValidityPeriod();
         LocalDateTime targetLocalDate = LocalDateTime.now(ZoneId.of(settingProperties.getTimeZone()));
         LocalDateTime tempDateTime = LocalDateTime.from(nowDate);
 
         Integer days = Math.toIntExact(tempDateTime.until(targetLocalDate, ChronoUnit.DAYS)) * -1;
 
-        return ShopResponse.builder()
+        return ShopFullResponse.builder()
                 .id(shop.getId())
                 .name(shop.getName())
                 .director(userMapper.toUserResponse(shop.getDirector()))
@@ -196,7 +314,22 @@ public class ShopService {
                 .build();
     }
 
-    private ShopResponseCountModerationReports toShopResponseCountModerationReports(Shop shop){
+    private ShopResponseModeration toResponseModeration(Shop shop) {
+        User creator = null;
+        if (!shop.getStaff().isEmpty()) {
+            creator = shop.getStaff().get(0);
+        }
+        return ShopResponseModeration.builder()
+                .id(shop.getId())
+                .name(shop.getName())
+                .isHaveJeweler(shop.isHaveJeweler())
+                .creator(creator != null
+                        ? userService.getUserResponse(creator.getId())
+                        : null)
+                .build();
+    }
+
+    private ShopResponseCountModerationReports toShopResponseCountModerationReports(Shop shop) {
         return ShopResponseCountModerationReports.builder()
                 .id(shop.getId())
                 .name(shop.getName())

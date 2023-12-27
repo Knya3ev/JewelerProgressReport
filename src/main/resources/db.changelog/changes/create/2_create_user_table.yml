@@ -7,7 +7,7 @@ databaseChangeLog:
         - createSequence:
             sequenceName: users_seq
             dataType: bigint
-            startValue: 1
+            startValue: 7  # исправить
             incrementBy: 1
             minValue: 1
             maxValue: 9223372036854775807
@@ -29,11 +29,14 @@ databaseChangeLog:
                   name: username
                   type: VARCHAR(50)
               - column:
+                  name: roles
+                  type: VARCHAR(50)
+              - column:
                   name: firstname
                   type: VARCHAR(50)
               - column:
                   name: telegram_id
-                  type: VARCHAR(100)
+                  type: bigint
                   constraints:
                     unique: true
               - column:
@@ -52,5 +55,13 @@ databaseChangeLog:
                   name: count_shops
                   type: INTEGER
                   defaultValueNumeric: 0
+              - column:
+                  name: in_staff
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: pending_approval
+                  type: boolean
+                  defaultValueBoolean: false
 
 

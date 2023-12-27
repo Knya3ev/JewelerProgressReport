@@ -57,6 +57,10 @@ public class Shop {
     @Column(name = "is_have_jeweler")
     private boolean isHaveJeweler = false;
 
+    @Builder.Default
+    @Column(name = "is_moderation")
+    private boolean isModeration = true;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private User director;
 

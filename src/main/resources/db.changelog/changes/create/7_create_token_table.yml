@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_token_table
+      author: Mikhail Knyazev
+      changes:
+
+        - createSequence:
+            sequenceName: token_seq
+            dataType: bigint
+            startValue: 1
+            incrementBy: 1
+            minValue: 1
+            maxValue: 9223372036854775807
+            cycle: false
+            cacheSize: 1
+
+        - createTable:
+            tableName: token
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: jwt
+                  type: varchar(255)
+              - column:
+                  name: token_refresh
+                  type: varchar(255)
+              - column:
+                  name: expiration
+                  type: timestamp
+              - column:
+                  name: user_id
+                  type: bigint
+
+        - addForeignKeyConstraint:
+            baseTableName: token
+            baseColumnNames: user_id
+            constraintName: fk_token_user_id
+            referencedTableName: users
+            referencedColumnNames: id

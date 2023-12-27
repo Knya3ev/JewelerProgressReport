@@ -11,7 +11,10 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
-    Optional<User> findByTelegramId(Long telegramId);
+
+    Optional<User> findByUsername (String username);
+
+    Optional<User> findByTelegramId(long telegramId);
 
     @Modifying
     @Query("""

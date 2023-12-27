@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ShopRequest {
 
-    @Size(min = 3, max = 10, message = "min 3 char and max 10 char for name your shop")
+    @Size(min = 3, max = 20, message = "min 3 char and max 20 char for name your shop")
     private String name;
 
     @Builder.Default

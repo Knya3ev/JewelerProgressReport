@@ -34,14 +34,14 @@ public class ReportController {
     private final ReportMapper reportMapper;
 
     @Operation(summary = "Creating report")
-    @PostMapping(value = "/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/create/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReportResponse> create(@PathVariable("userId") Long userId,
                                                  @RequestBody @Valid ReportRequest reportRequest) {
         return ResponseEntity.ok().body(reportMapper.toReportResponse(reportService.create(userId, reportRequest)));
     }
 
     @Operation(summary = "Create report Consultation")
-    @PostMapping(value = "/{userId}/consultation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "create/{userId}/consultation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseCounseling> createConsultation(@PathVariable("userId") Long userId,
                                                                  @RequestBody @Valid ReportCounselingRequest request){
         return ResponseEntity.ok(reportService.createCounseling(userId,request));

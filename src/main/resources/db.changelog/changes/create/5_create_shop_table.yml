@@ -6,7 +6,7 @@ databaseChangeLog:
         - createSequence:
             sequenceName: shop_seq
             dataType: bigint
-            startValue: 1
+            startValue: 6 # исправить
             incrementBy: 1
             minValue: 1
             maxValue: 9223372036854775807
@@ -46,10 +46,14 @@ databaseChangeLog:
                   type: BOOLEAN
                   defaultValueBoolean: false
               - column:
+                  name: is_moderation
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+              - column:
                   name: director_id
                   type: BIGINT
                   constraints:
-                    nullable: false
+                    nullable: true
                     foreignKeyName: shop_director_fk
               - column:
                   name: paid_subscription_validity_period
